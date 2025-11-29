@@ -2,9 +2,10 @@ import { useAuth } from "./hooks/useAuth";
 import { Button } from "./components/ui/button";
 import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
-import { logout } from "./firebase/auth";
 import { HomePage } from './pages/HomePage';
 import { Header } from "./components/layout/Header";
+import { ProjectList } from "./components/project/ProjectList";
+import { CreateProjectForm } from "./components/project/CreateProjectForm";
 
 
 function App() {
@@ -28,7 +29,19 @@ function App() {
   return (
     <div className="min-h-screen">
       <Header />
-      <HomePage />
+      {/* <HomePage /> */}
+      {/* <ProjectList /> */}
+      <div className="py-12">
+        <CreateProjectForm 
+          onSuccess={(projectId) => {
+            console.log('✅ 프로젝트 생성 완료:', projectId);
+            alert(`프로젝트 생성 완료! ID: ${projectId}`);
+          }}
+          onCancel={() => {
+            console.log('취소 클릭');
+          }}
+        />
+      </div>
     </div>
   )
 }

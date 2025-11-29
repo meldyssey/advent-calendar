@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { signInWithGoogle } from "@/firebase/auth";
+import { Spinner } from "../ui/spinner";
 
 export const LoginForm = () => {
   const [loading, setLoading] = useState(false)
@@ -42,7 +43,7 @@ export const LoginForm = () => {
             onClick={handleGoogleLogin}
             disabled={loading}
           >
-            {loading ? '로그인 중...' : 'Login with Google'}
+            {loading ? (<><Spinner/>로그인 중...</>) : 'Login with Google'}
           </Button>
         </CardFooter>
       </Card>
