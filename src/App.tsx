@@ -1,21 +1,34 @@
-import FirebaseConnectTest from './components/FirebaseConnectTest';
-import { Button } from "@/components/ui/button"
+import { useAuth } from "./hooks/useAuth";
+import { Button } from "./components/ui/button";
+import { Spinner } from "./components/ui/spinner";
+import { LoginForm } from "./components/auth/LoginForm";
+import { logout } from "./firebase/auth";
 
 
 function App() {
-  return (
-    <>
-      <FirebaseConnectTest />
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-slate-900">
-            🎄 shadcn/ui 설치 완료!
-          </h1>
-          <Button>클릭해보세요</Button>
-        </div>
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <Button variant="outline" disabled size="sm">
+          <Spinner />
+            Please wait
+        </Button>
       </div>
-    </>
-  );
+    )
+  }
+
+  if (!user){
+    return <LoginForm />
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center flex-col gap-4">
+      <h1>Hello, {user.displayName || user.email}</h1>
+      <Button onClick={logout}>로그아웃</Button>
+    </div>
+  )
 }
 
 export default App;
