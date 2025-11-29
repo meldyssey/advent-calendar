@@ -3,6 +3,8 @@ import { Button } from "./components/ui/button";
 import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
 import { logout } from "./firebase/auth";
+import { HomePage } from './pages/HomePage';
+import { Header } from "./components/layout/Header";
 
 
 function App() {
@@ -24,9 +26,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center flex-col gap-4">
-      <h1>Hello, {user.displayName || user.email}</h1>
-      <Button onClick={logout}>로그아웃</Button>
+    <div className="min-h-screen">
+      <Header />
+      <HomePage />
     </div>
   )
 }
