@@ -50,7 +50,7 @@ export const getUser = async (
     const data = userDoc.data();
     return {
       uid: data.uid,
-      email: data.emial,
+      email: data.email,
       displayName: data.displayName,
       photoURL: data.photoURL,
     };
