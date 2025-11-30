@@ -28,15 +28,12 @@ function App() {
     )
   }
 
-  // 로그인하지 않은 경우
-  if (!user) {
-    // /join 경로는 로그인 후 리다이렉트를 위해 저장
-    if (location.pathname.startsWith('/join')) {
-      // 로그인 페이지에 returnUrl 전달
-      return <LoginForm returnUrl={location.pathname} />;
-    }
-    
-    return <LoginForm />;
+  // 초대 링크 접근 시에만 로그인 필수
+  const isInvitePath = location.pathname.startsWith('/join');
+
+  if (!user && isInvitePath) {
+    // 초대 링크는 로그인 후 리다이렉트를 위해 저장
+    return <LoginForm returnUrl={location.pathname} />;
   }
   
   return (

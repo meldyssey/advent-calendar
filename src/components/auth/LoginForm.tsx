@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -9,20 +9,28 @@ import {
 } from "@/components/ui/card"
 import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
+import { useNavigate } from "react-router";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LoginFormProps {
   returnUrl?: string;
 }
 
 export const LoginForm = ({returnUrl}: LoginFormProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
+
+  useEffect(()=>{
+    if(user) {
+      navigate(returnUrl || '/');
+    }
+  }, [user, returnUrl])
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      // signInWithGoogle 함수를 한 번만 호출합니다.
       await signInWithGoogle();
-      // 로그인 성공 후의 로직은 onAuthStateChanged가 처리하므로 여기서는 특별한 작업이 필요 없습니다.
     } catch (error){
       console.error('로그인 실패:', error);
       alert('로그인에 실패했습니다.');
