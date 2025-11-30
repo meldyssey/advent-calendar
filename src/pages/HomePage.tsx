@@ -26,32 +26,52 @@ export const HomePage = () => {
           </p>
         </div>
 
-        {/* 시작하기 카드 */}
-        <Card className="max-w-md mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
+        {user ? (
+          <Card className="max-w-md mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
+            <CardHeader className="text-center">
+              <div className="text-6xl mb-4">🎁</div>
+              <CardTitle className="text-2xl">시작하기</CardTitle>
+              <CardDescription>
+                새로운 프로젝트를 만들거나 기존 프로젝트를 확인하세요
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button 
+                onClick={()=>navigate('/projects/new')}
+                className="w-full" 
+                size="lg"
+              >
+                📝 새 프로젝트 만들기
+              </Button>
+              <Button 
+                onClick={() => navigate('/projects')}
+                className="w-full" 
+                variant="outline" 
+                size="lg">
+                📂 내 프로젝트 보기
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="max-w-md mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
           <CardHeader className="text-center">
             <div className="text-6xl mb-4">🎁</div>
             <CardTitle className="text-2xl">시작하기</CardTitle>
             <CardDescription>
-              새로운 프로젝트를 만들거나 기존 프로젝트를 확인하세요
+              프로젝트를 시작하기 위해 로그인해주세요.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button 
-              onClick={()=>navigate('/projects/new')}
+              onClick={()=>navigate('/login')}
               className="w-full" 
               size="lg"
             >
-              📝 새 프로젝트 만들기
-            </Button>
-            <Button 
-              onClick={() => navigate('/projects')}
-              className="w-full" 
-              variant="outline" 
-              size="lg">
-              📂 내 프로젝트 보기
+              로그인하기
             </Button>
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   )
