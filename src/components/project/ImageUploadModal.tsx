@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { uploadImage } from '@/firebase/image';
+import { getUser } from '@/firebase/user';
 
 interface ImageUploadModalProps {
   projectId: string;
@@ -19,10 +20,22 @@ export const ImageUploadModal = ({
   onSuccess,
 }: ImageUploadModalProps) => {
   const { user } = useAuth();
+  const [userName, setUserName] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  useEffect(() => {
+    const loadUserName = async () => {
+      if(!user) return;
+
+      const userInfo = await getUser(user.uid)
+      setUserName(userInfo?.displayName || user.email || '익명')
+    }
+
+    loadUserName();
+  }, [user])
 
   // 파일 선택
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +88,7 @@ export const ImageUploadModal = ({
         dayNumber,
         file,
         user.uid,
-        user.displayName || user.email || '익명'
+        userName
       );
 
       clearInterval(interval);
