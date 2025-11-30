@@ -1,6 +1,7 @@
 import type { ProjectData } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { useNavigate } from 'react-router';
 
 // 프로젝트 카드 컴포넌트
 interface ProjectCardProps {
@@ -8,6 +9,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
+  const navigate = useNavigate()
   // 날짜 포맷
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('ko-KR', {
@@ -62,7 +64,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
 
         {/* 버튼 */}
-        <Button className="w-full">
+        <Button
+          onClick={() => navigate(`/projects/${project.id}`)}
+          className="w-full"
+        >
           프로젝트 보기
         </Button>
       </CardContent>

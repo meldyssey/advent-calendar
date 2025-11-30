@@ -15,13 +15,13 @@ export const HomePage = () => {
         <img 
           src="/images/logo.png" 
           alt="Logo" 
-          className="h-64 mx-auto"
+          className="mx-auto"
         />
         <div className="text-center mb-12">
-          <h2 className="text-5xl font-yangju text-slate-900 m-4">
+          <h2 className="text-4xl font-yangju text-slate-900 mt-10">
             함께 만드는 특별한 추억
           </h2>
-          <p className="font-yangju text-xl text-slate-600">
+          <p className="font-yangju text-xl text-slate-600 mt-4">
             어드벤트 캘린더로 소중한 순간을 기록하세요
           </p>
         </div>

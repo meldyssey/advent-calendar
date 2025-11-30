@@ -8,6 +8,7 @@ import { useState } from "react";
 import { ProjectListPage } from "./pages/ProjectListPage";
 import { Navigate, Route, Routes } from "react-router";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
+import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 
 type Page = 'home' | 'projects' | 'create';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/" element={<HomePage/>}/>
         <Route path="/login" element={<LoginForm/>}/>
         <Route path="/projects" element={<ProjectListPage/>}/>
+        <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
         <Route path="/projects/new" element={<CreateProjectPage/>}/>
         <Route path="*" element={<Navigate to="/" replace />}/>
       </Routes>
