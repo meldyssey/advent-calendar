@@ -75,18 +75,18 @@ export const ImageDetailModal = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-8"
       onClick={onClose}
       tabIndex={0}
     >
       <div
-        className="relative max-w-5xl w-full"
+        className="relative max-w-3xl w-full max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 닫기 버튼 */}
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors"
+          className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors z-10"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -94,12 +94,12 @@ export const ImageDetailModal = ({
         </button>
 
         {/* 이미지 */}
-        <div className="bg-white rounded-lg overflow-hidden">
-          <div className="relative">
+        <div className="bg-white rounded-lg overflow-hidden flex flex-col max-h-full">
+          <div className="relative flex-shrink-0">
             <img
               src={currentImage.imageUrl}
               alt={`Day ${dayNumber} - ${dayTheme}`}
-              className="object-contain  object-contain bg-slate-100"
+              className="w-full h-auto max-h-[50vh] object-contain bg-slate-100"
             />
 
             {/* 이전/다음 버튼 (이미지가 여러 개일 때만) */}
@@ -133,13 +133,13 @@ export const ImageDetailModal = ({
           </div>
 
           {/* 이미지 정보 */}
-          <div className="p-6 border-t">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
+          <div className="p-4 border-t overflow-y-auto flex-shrink">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-bold text-slate-900 mb-1">
                   D-{totalDays - dayNumber}: {dayTheme}
                 </h3>
-                <div className="space-y-1 text-sm text-slate-600">
+                <div className="space-y-1 text-xs text-slate-600">
                   <p>
                     👤 {currentImage.userName}
                   </p>
@@ -162,6 +162,7 @@ export const ImageDetailModal = ({
                   disabled={deleting}
                   variant="destructive"
                   size="sm"
+                  className="flex-shrink-0"
                 >
                   {deleting ? '삭제 중...' : '🗑️ 삭제'}
                 </Button>
@@ -170,12 +171,12 @@ export const ImageDetailModal = ({
 
             {/* 썸네일 리스트 (이미지가 여러 개일 때) */}
             {images.length > 1 && (
-              <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
                 {images.map((image, index) => (
                   <button
                     key={image.id}
                     onClick={() => setCurrentIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden border-2 transition-all ${
+                    className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
                       index === currentIndex
                         ? 'border-blue-500 scale-105'
                         : 'border-slate-300 opacity-60 hover:opacity-100'
