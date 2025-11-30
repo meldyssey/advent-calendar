@@ -1,0 +1,198 @@
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { deleteImage } from '@/firebase/image';
+import type { ImageData } from '@/types';
+
+interface ImageDetailModalProps {
+  images: ImageData[];
+  initialIndex?: number;
+  dayTheme: string;
+  dayNumber: number;
+  projectId: string;
+  totalDays: number;
+  onClose: () => void;
+  onDelete?: () => void;
+}
+
+export const ImageDetailModal = ({
+  images,
+  initialIndex = 0,
+  dayTheme,
+  dayNumber,
+  projectId,
+  totalDays,
+  onClose,
+  onDelete,
+}: ImageDetailModalProps) => {
+  const { user } = useAuth();
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [deleting, setDeleting] = useState(false);
+
+  const currentImage = images[currentIndex];
+  const isOwner = user?.uid === currentImage.userId;
+
+  // 이전 이미지
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
+  // 다음 이미지
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  };
+
+  // 이미지 삭제
+  const handleDelete = async () => {
+    if (!isOwner) {
+      alert('자신이 올린 이미지만 삭제할 수 있습니다.');
+      return;
+    }
+
+    if (!confirm('이미지를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      
+      await deleteImage(projectId, currentImage.id, currentImage.storagePath);
+      
+      console.log('이미지 삭제 완료');
+      
+      // 삭제 후 처리
+      if (onDelete) {
+        onDelete();
+      }
+      onClose();
+    } catch (error) {
+      console.error('이미지 삭제 실패:', error);
+      alert('이미지 삭제에 실패했습니다.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+      tabIndex={0}
+    >
+      <div
+        className="relative max-w-5xl w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* 닫기 버튼 */}
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* 이미지 */}
+        <div className="bg-white rounded-lg overflow-hidden">
+          <div className="relative">
+            <img
+              src={currentImage.imageUrl}
+              alt={`Day ${dayNumber} - ${dayTheme}`}
+              className="object-contain  object-contain bg-slate-100"
+            />
+
+            {/* 이전/다음 버튼 (이미지가 여러 개일 때만) */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevious}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+
+            {/* 이미지 카운터 */}
+            {images.length > 1 && (
+              <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                {currentIndex + 1} / {images.length}
+              </div>
+            )}
+          </div>
+
+          {/* 이미지 정보 */}
+          <div className="p-6 border-t">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  D-{totalDays - dayNumber}: {dayTheme}
+                </h3>
+                <div className="space-y-1 text-sm text-slate-600">
+                  <p>
+                    👤 {currentImage.userName}
+                  </p>
+                  <p>
+                    📅 {currentImage.uploadedAt.toLocaleString('ko-KR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {/* 삭제 버튼 (본인만) */}
+              {isOwner && (
+                <Button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  variant="destructive"
+                  size="sm"
+                >
+                  {deleting ? '삭제 중...' : '🗑️ 삭제'}
+                </Button>
+              )}
+            </div>
+
+            {/* 썸네일 리스트 (이미지가 여러 개일 때) */}
+            {images.length > 1 && (
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+                {images.map((image, index) => (
+                  <button
+                    key={image.id}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden border-2 transition-all ${
+                      index === currentIndex
+                        ? 'border-blue-500 scale-105'
+                        : 'border-slate-300 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img
+                      src={image.imageUrl}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

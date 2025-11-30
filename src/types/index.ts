@@ -83,12 +83,13 @@ export interface Image {
   uploadedAt: Timestamp;
 }
 
-
-export interface Image {
+export interface ImageData {
   id: string;
+  projectId: string;
   dayNumber: number;
   userId: string;
   userName: string;
   imageUrl: string;
-  uploadedAt: Timestamp;
+  storagePath: string;
+  uploadedAt: Date;
 }
