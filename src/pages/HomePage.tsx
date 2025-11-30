@@ -3,10 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
 import { Navigate } from 'react-router';
+import { LoginModal } from '@/components/auth/LoginModal';
+import { useState } from 'react';
 
 export const HomePage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <div className="p-8">
@@ -62,9 +65,9 @@ export const HomePage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
-              onClick={()=>navigate('/login')}
-              className="w-full" 
+            <Button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="w-full"
               size="lg"
             >
               로그인하기
@@ -72,6 +75,12 @@ export const HomePage = () => {
           </CardContent>
         </Card>
         )}
+
+        {/* 로그인 모달 */}
+        <LoginModal
+          open={isLoginModalOpen}
+          onOpenChange={setIsLoginModalOpen}
+        />
       </div>
     </div>
   )

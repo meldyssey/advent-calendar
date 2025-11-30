@@ -2,10 +2,22 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '../ui/button';
 import { logout } from '@/firebase/auth';
 import { useNavigate } from 'react-router';
+import { LoginModal } from '../auth/LoginModal';
+import { useState } from 'react';
 
 export const Header = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleLogout = async() => {
+    try {
+      await logout()
+      navigate('/')
+    } catch (error) {
+      console.error('로그아웃 실패', error)
+    }
+  }
 
   return (
     <header className="bg-white border-b border-slate-300">
@@ -31,7 +43,7 @@ export const Header = () => {
                   📂 내 프로젝트
                 </Button>
                 <Button 
-                  onClick={logout} 
+                  onClick={handleLogout} 
                   variant="ghost" 
                   className="text-sm font-medium"
                 >
@@ -39,9 +51,9 @@ export const Header = () => {
                 </Button>
               </>
             ) : (
-              <Button 
-                onClick={() => navigate('/login')} 
-                variant="default" 
+              <Button
+                onClick={() => setIsLoginModalOpen(true)}
+                variant="default"
                 className="text-sm font-medium"
               >
                 로그인
@@ -50,6 +62,12 @@ export const Header = () => {
           </nav>
         </div>
       </div>
+
+      {/* 로그인 모달 */}
+      <LoginModal
+        open={isLoginModalOpen}
+        onOpenChange={setIsLoginModalOpen}
+      />
     </header>
   )
 }

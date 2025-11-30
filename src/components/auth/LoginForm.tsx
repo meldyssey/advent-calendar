@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
+import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -40,12 +41,12 @@ export const LoginForm = ({returnUrl}: LoginFormProps) => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            구글게정으로 로그인해주세요.
+            구글계정으로 로그인해주세요.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex-col gap-2">
