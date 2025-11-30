@@ -1,7 +1,9 @@
 import { CalendarGrid } from '@/components/project/CalendarGrid';
+import { InviteModal } from '@/components/project/InviteModal';
 import { Button } from '@/components/ui/button';
 import { getDays } from '@/firebase/days';
 import { getProject } from '@/firebase/projects';
+import { useAuth } from '@/hooks/useAuth';
 import type { DayData, ProjectData } from '@/types';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -9,10 +11,12 @@ import { useNavigate, useParams } from 'react-router';
 export const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [project, setProject] = useState<ProjectData>()
   const [days, setDays] = useState<DayData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   useEffect(() => {
     const loadProject = async () => {
@@ -66,6 +70,8 @@ export const ProjectDetailPage = () => {
     );
   }
 
+  const isCreator = user?.uid === project?.createdBy
+
   // D-Day 계산
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -100,13 +106,30 @@ export const ProjectDetailPage = () => {
               <span>
                 👥 {project.members.length}명
               </span>
+              {/* 초대 버튼 (생성자만) - 추가 */}
+              {isCreator && (
+                <Button
+                  onClick={() => setIsInviteModalOpen(true)}
+                  className="ml-4"
+                >
+                  👥 친구 초대
+                </Button>
+              )}
             </div>
           </div>
+          
         </div>
 
         {/* 캘린더 그리드 */}
         <CalendarGrid days={days} projectId={id!} totalDays={project.totalDays}/>
       </div>
+      {/* 초대 모달 - 추가 */}
+      {isInviteModalOpen && (
+        <InviteModal
+          projectId={id!}
+          onClose={() => setIsInviteModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

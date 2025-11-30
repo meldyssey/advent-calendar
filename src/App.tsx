@@ -6,14 +6,16 @@ import { HomePage } from './pages/HomePage';
 import { Header } from "./components/layout/Header";
 import { useState } from "react";
 import { ProjectListPage } from "./pages/ProjectListPage";
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
 import { ProjectDetailPage } from "./pages/ProjectDetailPage";
+import { JoinProjectPage } from "./pages/JoinProjectPage";
 
 type Page = 'home' | 'projects' | 'create';
 
 function App() {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -26,6 +28,17 @@ function App() {
     )
   }
 
+  // 로그인하지 않은 경우
+  if (!user) {
+    // /join 경로는 로그인 후 리다이렉트를 위해 저장
+    if (location.pathname.startsWith('/join')) {
+      // 로그인 페이지에 returnUrl 전달
+      return <LoginForm returnUrl={location.pathname} />;
+    }
+    
+    return <LoginForm />;
+  }
+  
   return (
     <div className="min-h-screen">
       <Header />
@@ -35,6 +48,7 @@ function App() {
         <Route path="/projects" element={<ProjectListPage/>}/>
         <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
         <Route path="/projects/new" element={<CreateProjectPage/>}/>
+        <Route path="/join/:id" element={<JoinProjectPage/>}/>
         <Route path="*" element={<Navigate to="/" replace />}/>
       </Routes>
     </div>

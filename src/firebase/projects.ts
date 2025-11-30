@@ -1,7 +1,8 @@
-import type { CreateProjectParams, ProjectData } from "@/types";
-import { collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, Timestamp, where } from "firebase/firestore";
+import type { CreateProjectParams, ProjectData, UserInfo } from "@/types";
+import { arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "./config";
 import { DEFAULT_THEMES } from "@/constants/themes";
+import { getUsers } from "./user";
 
 // Timestamp → Date 변환
 const timestampToDate = (timestamp: any): Date => {
@@ -109,3 +110,57 @@ export const getProject = async (projectId: string): Promise<ProjectData | null>
     throw error;
   }
 };
+
+export const addMember = async (
+  projectId: string,
+  userId: string,
+): Promise<void> => {
+  try {
+    const projectRef = doc(db, 'projects', projectId)
+    const projectDoc = await getDoc(projectRef)
+    
+    if(!projectDoc.exists()){
+      throw new Error('프로젝트를 찾을 수 없습니다.')
+    }
+
+    const projectData = projectDoc.data();
+
+    if(projectData.members.includes()) {
+      throw new Error('이미 프로젝트 멤버입니다.');
+    }
+
+    await updateDoc(projectRef, {
+      members: arrayUnion(userId)
+    })
+
+    console.log('멤버 추가 완료', userId)
+  } catch (error) {
+    console.error('멤버 추가 실패', error)
+    throw error;
+  }
+}
+
+export const getProjectMembers = async (
+  projectId: string,
+): Promise<UserInfo[]> => {
+  try {
+    const projectRef = doc(db, 'projects', projectId);
+    const projectDoc = await getDoc(projectRef);
+    
+    if(!projectDoc.exists()){
+      throw new Error('프로젝트를 찾을 수 없습니다.');
+    }
+
+    const projectData = projectDoc.data();
+
+    const memberIds = projectData.members as string[];
+
+    const members = await getUsers(memberIds)
+
+    return members;
+
+  } catch (error) {
+    console.error('멤버 조회 실패:', error);
+    throw error;
+  }
+}

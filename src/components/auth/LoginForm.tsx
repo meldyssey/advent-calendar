@@ -10,7 +10,11 @@ import {
 import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  returnUrl?: string;
+}
+
+export const LoginForm = ({returnUrl}: LoginFormProps) => {
   const [loading, setLoading] = useState(false)
 
   const handleGoogleLogin = async () => {
