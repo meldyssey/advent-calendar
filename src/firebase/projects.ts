@@ -1,7 +1,30 @@
 import type { CreateProjectParams, ProjectData } from "@/types";
-import { collection, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, Timestamp, where } from "firebase/firestore";
 import { db } from "./config";
 import { DEFAULT_THEMES } from "@/constants/themes";
+
+// Timestamp → Date 변환
+const timestampToDate = (timestamp: any): Date => {
+  if (timestamp?.toDate) {
+    return timestamp.toDate();
+  }
+  return new Date(timestamp);
+};
+
+// Firestore Project → ProjectData 변환
+const convertProject = (id: string, data: any): ProjectData => {
+  return {
+    id,
+    title: data.title,
+    createdBy: data.createdBy,
+    members: data.members,
+    startDate: timestampToDate(data.startDate),
+    endDate: timestampToDate(data.endDate),
+    totalDays: data.totalDays,
+    isCustomTheme: data.isCustomTheme,
+    createdAt: timestampToDate(data.createdAt),
+  };
+};
 
 // 프로젝트 생성
 export const createProject = async (params: CreateProjectParams): Promise<string> => {
@@ -52,3 +75,37 @@ export const createProject = async (params: CreateProjectParams): Promise<string
     throw error;
   }
 }
+
+export const getMyProjects = async (userId: string): Promise<ProjectData[]> => {
+  try {
+    const projectsRef = collection(db, 'projects');
+    const q = query(
+      projectsRef,
+      where('members', 'array-contains', userId),
+      orderBy('createdAt', 'desc')
+    )
+    const origin = await getDocs(q);
+    
+    return origin.docs.map(doc => convertProject(doc.id, doc.data()))
+  } catch (error) {
+    console.error('프로젝트 가져오기 실패: ', error);
+    throw error;
+  }
+};
+
+export const getProject = async (projectId: string): Promise<ProjectData | null> => {
+  try {
+    const projectRef = doc(db, 'projects', projectId);
+
+    const origin = await getDoc(projectRef);
+
+    if (!origin.exists()){
+      return null;
+    }
+    
+    return convertProject(origin.id, origin.data())
+  } catch (error) {
+    console.error('프로젝트 가져오기 실패: ', error);
+    throw error;
+  }
+};

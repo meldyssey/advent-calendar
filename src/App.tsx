@@ -4,9 +4,12 @@ import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
 import { HomePage } from './pages/HomePage';
 import { Header } from "./components/layout/Header";
-import { ProjectList } from "./components/project/ProjectList";
-import { CreateProjectForm } from "./components/project/CreateProjectForm";
+import { useState } from "react";
+import { ProjectListPage } from "./pages/ProjectListPage";
+import { Navigate, Route, Routes } from "react-router";
+import { CreateProjectPage } from "./pages/CreateProjectPage";
 
+type Page = 'home' | 'projects' | 'create';
 
 function App() {
   const { user, loading } = useAuth();
@@ -16,34 +19,24 @@ function App() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <Button variant="outline" disabled size="sm">
           <Spinner />
-            Please wait
+            로딩 중...
         </Button>
       </div>
     )
   }
 
-  if (!user){
-    return <LoginForm />
-  }
-
   return (
     <div className="min-h-screen">
       <Header />
-      {/* <HomePage /> */}
-      {/* <ProjectList /> */}
-      <div className="py-12">
-        <CreateProjectForm 
-          onSuccess={(projectId) => {
-            console.log('✅ 프로젝트 생성 완료:', projectId);
-            alert(`프로젝트 생성 완료! ID: ${projectId}`);
-          }}
-          onCancel={() => {
-            console.log('취소 클릭');
-          }}
-        />
-      </div>
+      <Routes>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/login" element={<LoginForm/>}/>
+        <Route path="/projects" element={<ProjectListPage/>}/>
+        <Route path="/projects/new" element={<CreateProjectPage/>}/>
+        <Route path="*" element={<Navigate to="/" replace />}/>
+      </Routes>
     </div>
-  )
+  );
 }
 
 export default App;

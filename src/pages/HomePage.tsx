@@ -1,7 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router';
+import { Navigate } from 'react-router';
 
 export const HomePage = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="p-8">
       <div className="max-w-4xl mx-auto">
@@ -30,10 +36,18 @@ export const HomePage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button className="w-full" size="lg">
+            <Button 
+              onClick={()=>navigate('/projects/new')}
+              className="w-full" 
+              size="lg"
+            >
               📝 새 프로젝트 만들기
             </Button>
-            <Button className="w-full" variant="outline" size="lg">
+            <Button 
+              onClick={() => navigate('/projects')}
+              className="w-full" 
+              variant="outline" 
+              size="lg">
               📂 내 프로젝트 보기
             </Button>
           </CardContent>
