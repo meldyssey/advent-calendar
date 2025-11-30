@@ -5,9 +5,10 @@ interface CalendarGridProps {
   days: DayData[];
   projectId: string;
   totalDays: number;
+  memberCount: number;
 }
 
-export const CalendarGrid = ({ days, projectId, totalDays }: CalendarGridProps) => {
+export const CalendarGrid = ({ days, projectId, totalDays, memberCount }: CalendarGridProps) => {
   if (days.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-8 text-center">
@@ -19,7 +20,13 @@ export const CalendarGrid = ({ days, projectId, totalDays }: CalendarGridProps) 
   return (
     <div className="grid grid-cols-1 gap-4">
       {days.map((day) => (
-        <DayCard key={day.id} day={day} projectId={projectId} totalDays={totalDays}/>
+        <DayCard
+          key={day.id}
+          day={day}
+          projectId={projectId}
+          totalDays={totalDays}
+          memberCount={memberCount}
+        />
       ))}
     </div>
   );

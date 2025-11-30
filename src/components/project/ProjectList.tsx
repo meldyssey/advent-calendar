@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getMyProjects } from '@/firebase/projects';
 import type { ProjectData } from '@/types';
 import { useAuth } from '@/hooks/useAuth';

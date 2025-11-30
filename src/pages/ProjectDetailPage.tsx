@@ -1,6 +1,7 @@
 import { CalendarGrid } from '@/components/project/CalendarGrid';
 import { InviteModal } from '@/components/project/InviteModal';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { getDays } from '@/firebase/days';
 import { getProject } from '@/firebase/projects';
 import { useAuth } from '@/hooks/useAuth';
@@ -53,6 +54,14 @@ export const ProjectDetailPage = () => {
     };
     loadProject();
   }, [id])
+  
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-lg text-slate-600"><Spinner/>프로젝트를 불러오는 중...</p>
+      </div>      
+    )
+  }
 
   // 에러
   if (error || !project || !days) {
@@ -121,7 +130,12 @@ export const ProjectDetailPage = () => {
         </div>
 
         {/* 캘린더 그리드 */}
-        <CalendarGrid days={days} projectId={id!} totalDays={project.totalDays}/>
+        <CalendarGrid
+          days={days}
+          projectId={id!}
+          totalDays={project.totalDays}
+          memberCount={project.members.length}
+        />
       </div>
       {/* 초대 모달 - 추가 */}
       {isInviteModalOpen && (

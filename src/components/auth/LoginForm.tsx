@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card"
 import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
-import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 

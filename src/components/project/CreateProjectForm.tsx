@@ -202,7 +202,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                 기본 주제 미리보기
               </h3>
               <div className="grid grid-cols-2 gap-3 text-sm text-blue-800">
-                {themes.map((theme, index) =>{
+                {themes.map((__, index) =>{
                   if(index === themes.length-1){
                     return(
                       <div key={index} className="p-2 bg-white rounded">D-Day <br/>

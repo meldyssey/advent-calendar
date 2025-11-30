@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
-import { Navigate } from 'react-router';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useState } from 'react';
 

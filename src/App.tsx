@@ -4,14 +4,11 @@ import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
 import { HomePage } from './pages/HomePage';
 import { Header } from "./components/layout/Header";
-import { useState } from "react";
 import { ProjectListPage } from "./pages/ProjectListPage";
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
 import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 import { JoinProjectPage } from "./pages/JoinProjectPage";
-
-type Page = 'home' | 'projects' | 'create';
 
 function App() {
   const { user, loading } = useAuth();
