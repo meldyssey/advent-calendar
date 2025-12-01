@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { signInWithGoogle } from "@/firebase/auth";
+import { signInWithGoogle } from "@/firebase/auth"; // 수정된 signInWithGoogle import
 import { Spinner } from "../ui/spinner";
 
 interface LoginModalProps {
@@ -22,10 +22,12 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     setLoading(true);
     try {
       await signInWithGoogle();
-      onOpenChange(false); // 로그인 성공 시 모달 닫기
+      // signInWithGoogle이 이제 리다이렉트를 수행하므로,
+      // 성공 시에는 페이지가 이동하며 모달은 자동으로 닫히게 됩니다.
+      // onOpenChange(false); 는 호출할 필요가 없습니다.
     } catch (error) {
-      console.error('로그인 실패:', error);
-      alert('로그인에 실패했습니다.');
+      console.error('리다이렉트 로그인 시작 실패:', error); // 에러 메시지 변경
+      alert('로그인 시도 중 오류가 발생했습니다.'); // 사용자에게 표시되는 메시지 변경
     } finally {
       setLoading(false);
     }

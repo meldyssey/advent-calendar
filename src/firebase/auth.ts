@@ -1,9 +1,11 @@
 import { auth } from "./config";
 import {
-  signInWithRedirect,
   GoogleAuthProvider,
   setPersistence,
   browserSessionPersistence,
+  signInWithRedirect,
+  getRedirectResult,
+  type User,
 } from "firebase/auth";
 
 export const signInWithGoogle = async (): Promise<void> => {
@@ -15,15 +17,21 @@ export const signInWithGoogle = async (): Promise<void> => {
 
     await setPersistence(auth, browserSessionPersistence);
     await signInWithRedirect(auth, provider);
-  } catch (error: unknown) {
-    console.error('로그인 실패', error);
-    if (error && typeof error === 'object' && 'code' in error) {
-      console.error('❌ 에러 코드:', error.code);
-      console.error('❌ 에러 메시지:', 'message' in error ? error.message : 'Unknown error');
-    }
+  } catch (error) {
+    console.error('리다이렉트 로그인 실패', error);
     throw error;
   }
-}
+};
+
+export const getGoogleRedirectResult = async (): Promise<User | null> => {
+  try {
+    const result = await getRedirectResult(auth);
+    return result ? result.user : null;
+  } catch (error) {
+    console.error('리다이렉트 결과 가져오기 실패', error);
+    throw error;
+  }
+};
 
 export const logout = async (): Promise<void> => {
   try{
