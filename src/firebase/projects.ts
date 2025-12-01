@@ -125,7 +125,7 @@ export const addMember = async (
 
     const projectData = projectDoc.data();
 
-    if(projectData.members.includes()) {
+    if(projectData.members.includes(userId)) {
       throw new Error('이미 프로젝트 멤버입니다.');
     }
 
