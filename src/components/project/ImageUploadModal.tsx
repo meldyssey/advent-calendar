@@ -8,6 +8,7 @@ interface ImageUploadModalProps {
   projectId: string;
   dayNumber: number;
   dayTheme: string;
+  totalDays: number;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -16,6 +17,7 @@ export const ImageUploadModal = ({
   projectId,
   dayNumber,
   dayTheme,
+  totalDays,
   onClose,
   onSuccess,
 }: ImageUploadModalProps) => {
@@ -116,7 +118,7 @@ export const ImageUploadModal = ({
         <div className="mb-4">
           <h2 className="text-xl font-bold text-slate-900">이미지 업로드</h2>
           <p className="text-sm text-slate-600 mt-1">
-            D-{dayNumber - 1}: {dayTheme}
+            D-{totalDays - dayNumber}: {dayTheme}
           </p>
         </div>
 

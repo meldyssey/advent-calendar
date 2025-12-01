@@ -184,6 +184,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
           projectId={projectId}
           dayNumber={day.dayNumber}
           dayTheme={day.theme}
+          totalDays={totalDays}
           onClose={() => setIsUploadModalOpen(false)}
           onSuccess={handleUploadSuccess}
         />
