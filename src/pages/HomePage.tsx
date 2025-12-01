@@ -17,7 +17,7 @@ export const HomePage = () => {
         <img 
           src="/images/logo.png" 
           alt="Logo" 
-          className="mx-auto"
+          className="max-w-xl mx-auto"
         />
         <div className="text-center mb-12">
           <h2 className="text-4xl font-yangju text-slate-900 mt-10">
@@ -29,7 +29,7 @@ export const HomePage = () => {
         </div>
 
         {user ? (
-          <Card className="max-w-md mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
+          <Card className="max-w-xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
             <CardHeader className="text-center">
               <div className="text-6xl mb-4">🎁</div>
               <CardTitle className="text-2xl">시작하기</CardTitle>
