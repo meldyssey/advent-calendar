@@ -12,7 +12,7 @@ export const uploadImage = async (
 ): Promise<string> => {
   try {
     const timestamp = Date.now();
-    const fileName = `${timestamp}_${file.name}`
+    const fileName = `${userId}__${timestamp}_${file.name}`
     const storageRef = ref(storage, `projects/${projectId}/day-${dayNumber}/${fileName}`)
 
     console.log('이미지 업로드 시작', fileName)
