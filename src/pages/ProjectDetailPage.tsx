@@ -105,7 +105,7 @@ export const ProjectDetailPage = () => {
             <h1 className="text-3xl font-bold text-slate-900 mb-2">
               {project.title}
             </h1>
-            <div className="flex items-center gap-4 text-slate-600">
+            <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:items-center text-slate-600">
               <span>
                 📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
               </span>
