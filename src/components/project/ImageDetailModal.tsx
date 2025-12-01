@@ -95,6 +95,11 @@ export const ImageDetailModal = ({
 
         {/* 이미지 */}
         <div className="bg-white rounded-lg overflow-hidden flex flex-col max-h-full">
+          <div className='m-2 text-lg'>
+            <h1 className="text-center font-bold text-slate-900 mb-1">
+              D-{totalDays - dayNumber}: {dayTheme}
+            </h1>
+          </div>     
           <div className="relative flex-shrink-0">
             <img
               src={currentImage.imageUrl}
@@ -136,9 +141,6 @@ export const ImageDetailModal = ({
           <div className="p-4 border-t overflow-y-auto flex-shrink">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-bold text-slate-900 mb-1">
-                  D-{totalDays - dayNumber}: {dayTheme}
-                </h3>
                 <div className="space-y-1 text-xs text-slate-600">
                   <p>
                     👤 {currentImage.userName}
