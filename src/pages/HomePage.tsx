@@ -17,7 +17,7 @@ export const HomePage = () => {
         <img 
           src="/images/logo.png" 
           alt="Logo" 
-          className="max-w-xl mx-auto"
+          className="w-full max-w-xl mx-auto"
         />
         <div className="text-center mb-12">
           <h2 className="text-4xl font-yangju text-slate-900 mt-10">
