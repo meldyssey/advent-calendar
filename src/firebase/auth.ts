@@ -5,6 +5,7 @@ import {
   browserSessionPersistence,
   signInWithRedirect,
   getRedirectResult,
+  signInWithPopup, // Import signInWithPopup
   type User,
 } from "firebase/auth";
 
@@ -16,7 +17,15 @@ export const signInWithGoogle = async (): Promise<void> => {
     console.log('🔍 Auth Config:', auth.config);
 
     await setPersistence(auth, browserSessionPersistence);
-    await signInWithRedirect(auth, provider);
+
+    // Conditionally use redirect or popup based on environment mode
+    if (import.meta.env.MODE === 'production') { // Assuming 'main' corresponds to production
+      await signInWithRedirect(auth, provider);
+      console.log('리다이렉트 로그인 시작');
+    } else { // Assuming 'dev' corresponds to development
+      await signInWithPopup(auth, provider);
+      console.log('팝업 로그인 완료'); // Popup completes immediately
+    }
   } catch (error) {
     console.error('리다이렉트 로그인 실패', error);
     throw error;
