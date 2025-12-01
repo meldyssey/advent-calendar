@@ -104,7 +104,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
             </div>
           ) : (
             <div className={`grid gap-2 ${
-              memberCount === 1 ? 'grid-cols-1' :
+              memberCount === 1 ? 'grid-cols-1 md:max-w-xs md:mx-auto' :
               memberCount === 2 ? 'grid-cols-2' :
               memberCount === 3 ? 'grid-cols-3' :
               memberCount === 4 ? 'grid-cols-2' :
