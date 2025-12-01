@@ -19,6 +19,15 @@ export const uploadImage = async (
       throw new Error("User not authenticated.");
     }
 
+    // 토큰이 만료되었을 경우를 대비하여 토큰 강제 새로고침
+    try {
+        await auth.currentUser.getIdToken(true); 
+        console.log("Firebase ID 토큰 새로고침 완료");
+    } catch (error) {
+        console.error("토큰 새로고침 실패:", error);
+        throw new Error("Failed to refresh authentication token.");
+    }
+    
     const timestamp = Date.now();
     const fileName = `${userId}__${timestamp}_${file.name}`
     const storageRef = ref(storage, `projects/${projectId}/day-${dayNumber}/${fileName}`)
