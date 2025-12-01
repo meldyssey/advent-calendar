@@ -176,11 +176,6 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
               📷 업로드 가능
             </div>
           )}
-          {isPast && (
-            <div className="text-xs text-slate-400">
-              이미지 없음
-            </div>
-          )}
         </div>
       </div>
       {/* 업로드 모달 */}
