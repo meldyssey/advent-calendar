@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { deleteImage } from '@/firebase/image';
 import type { ImageData } from '@/types';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface ImageDetailModalProps {
   images: ImageData[];
@@ -88,11 +89,8 @@ export const ImageDetailModal = ({
           onClick={onClose}
           className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors z-10"
         >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X className="w-8 h-8" />
         </button>
-
         {/* 이미지 */}
         <div className="bg-white rounded-lg overflow-hidden flex flex-col max-h-full">
           <div className='m-2 text-lg'>
@@ -114,17 +112,14 @@ export const ImageDetailModal = ({
                   onClick={handlePrevious}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
                   onClick={handleNext}
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight className="w-6 h-6" />
+
                 </button>
               </>
             )}

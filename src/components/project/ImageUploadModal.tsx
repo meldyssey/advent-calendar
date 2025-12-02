@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { uploadImage } from '@/firebase/image';
 import { getUser } from '@/firebase/user';
+import { UploadCloud } from 'lucide-react';
 
 interface ImageUploadModalProps {
   projectId: string;
@@ -127,19 +128,7 @@ export const ImageUploadModal = ({
           <div className="mb-4">
             <label className="block w-full">
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                <svg
-                  className="w-12 h-12 mx-auto text-slate-400 mb-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
+                <UploadCloud className="w-12 h-12 mx-auto text-slate-400 mb-2"/>
                 <p className="text-slate-600">클릭하여 이미지 선택</p>
                 <p className="text-xs text-slate-400 mt-1">
                   JPG, PNG, GIF (최대 10MB)
@@ -169,9 +158,7 @@ export const ImageUploadModal = ({
                 }}
                 className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <UploadCloud className="w-4 h-4"/>
               </button>
             </div>
 
