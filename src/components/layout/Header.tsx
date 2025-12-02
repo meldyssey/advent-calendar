@@ -22,7 +22,7 @@ export const Header = () => {
   return (
     <header className="bg-white border-b border-slate-300">
       <div className="max-w-7xl mx-auto px-8 py-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center flex-wrap md:justify-between md:flex-nowrap">
           {/* 로고 */}
           <button 
             onClick={() => navigate('/')}
@@ -32,7 +32,7 @@ export const Header = () => {
           </button>
 
           {/* 네비게이션 */}
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-4 mt-2 w-full justify-center md:mt-0 md:w-auto md:justify-start">
             {user ? (
               <>
                 <Button
@@ -40,7 +40,7 @@ export const Header = () => {
                   variant="ghost"
                   className="text-sm font-medium"
                 >
-                  📂 내 프로젝트
+                  내 프로젝트
                 </Button>
                 <Button 
                   onClick={handleLogout} 
