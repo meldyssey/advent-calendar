@@ -83,13 +83,13 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
       const calculatedStart = new Date(selectedDate)
       calculatedStart.setDate(selectedDate.getDate() - (totalDays - 1))
       // console.log(calculatedEnd.toISOString().split("T")[0])
-      if(calculatedStart < today){
-        setDateError(true);
-        alert('시작일이 오늘보다 이전일 수 없습니다. 날짜를 다시 선택해주세요.');
-        setStartDate('');  // 초기화
-        setEndDate('');    // 종료일도 초기화
-        return;
-      } 
+      // if(calculatedStart < today){
+      //   setDateError(true);
+      //   alert('시작일이 오늘보다 이전일 수 없습니다. 날짜를 다시 선택해주세요.');
+      //   setStartDate('');  // 초기화
+      //   setEndDate('');    // 종료일도 초기화
+      //   return;
+      // } 
     setStartDate(calculatedStart.toISOString().split("T")[0])
     setDateError(false)
     }
