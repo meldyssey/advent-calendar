@@ -5,6 +5,6 @@ export function isKakaoTalkBrowser(): boolean {
 }; 
 
 export function openInExternalBrwoser(url?: string): void {
-  const targetUrl = 'https://advent-calendar-68497.web.app/';
+  const targetUrl = url || window.location.href;
   window.location.replace(`kakaotalk://web/openExternal?url=${encodeURIComponent(targetUrl)}`);
 }
