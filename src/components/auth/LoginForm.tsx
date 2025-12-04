@@ -11,6 +11,7 @@ import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
+import { isKakaoTalkBrowser, openInExternalBrwoser } from "@/lib/browserDetect";
 
 interface LoginFormProps {
   returnUrl?: string;
@@ -20,6 +21,12 @@ export const LoginForm = ({returnUrl}: LoginFormProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
+  
+  useEffect(()=>{
+    if (isKakaoTalkBrowser()) {
+      openInExternalBrwoser();
+    }
+  }, [])
 
   useEffect(()=>{
     if(user) {
