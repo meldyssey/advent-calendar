@@ -1,5 +1,4 @@
 import { useAuth } from "./hooks/useAuth";
-import { Button } from "./components/ui/button";
 import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
 import { HomePage } from './pages/HomePage';
