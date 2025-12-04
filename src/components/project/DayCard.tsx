@@ -101,7 +101,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
         <div className="my-3">
           {loading ? (
             <div className="h-32 rounded flex items-center justify-center">
-              <div className="text-xs text-slate-400">로딩 중...</div>
+              <div className="text-sm text-slate-400">로딩 중...</div>
             </div>
           ) : (
             <div className={`grid gap-2 ${

@@ -16,11 +16,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <Button variant="outline" disabled size="sm">
-          <Spinner />
-            로딩 중...
-        </Button>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Spinner />
+        <p className="text-sm text-slate-600 mt-4">로딩 중...</p>
       </div>
     )
   }
@@ -34,17 +32,19 @@ function App() {
   }
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <Routes>
-        <Route path="/" element={<HomePage/>}/>
-        <Route path="/login" element={<LoginForm/>}/>
-        <Route path="/projects" element={<ProjectListPage/>}/>
-        <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
-        <Route path="/projects/new" element={<CreateProjectPage/>}/>
-        <Route path="/join/:id" element={<JoinProjectPage/>}/>
-        <Route path="*" element={<Navigate to="/" replace />}/>
-      </Routes>
+      <main className="flex-1 flex flex-col">
+        <Routes>
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/login" element={<LoginForm/>}/>
+          <Route path="/projects" element={<ProjectListPage/>}/>
+          <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
+          <Route path="/projects/new" element={<CreateProjectPage/>}/>
+          <Route path="/join/:id" element={<JoinProjectPage/>}/>
+          <Route path="*" element={<Navigate to="/" replace />}/>
+        </Routes>
+      </main>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { addMember, getProject } from "@/firebase/projects";
 import { useAuth } from "@/hooks/useAuth";
 import type { ProjectData } from "@/types";
@@ -69,13 +70,10 @@ export const JoinProjectPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <div className="text-xl font-semibold text-slate-700">
-            로딩 중...
-          </div>
-        </div>
-      </div>
+      <div className="h-full flex flex-col items-center justify-center">
+        <Spinner />
+        <p className="text-sm text-slate-600 mt-4">로딩 중...</p>
+      </div>     
     );
   }
 

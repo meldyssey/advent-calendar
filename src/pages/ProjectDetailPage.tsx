@@ -57,8 +57,9 @@ export const ProjectDetailPage = () => {
   
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <p className="text-lg text-slate-600"><Spinner/>프로젝트를 불러오는 중...</p>
+      <div className="h-full flex flex-col items-center justify-center">
+        <Spinner />
+        <p className="text-sm text-slate-600 mt-4">프로젝트를 불러오는 중...</p>
       </div>      
     )
   }
