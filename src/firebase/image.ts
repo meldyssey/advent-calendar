@@ -4,6 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTime
 import type { ImageData } from '@/types';
 import { getAuth } from 'firebase/auth';
 
+// 이미지 업로드
 export const uploadImage = async (
   projectId: string,
   dayNumber: number,
@@ -12,17 +13,15 @@ export const uploadImage = async (
   userName: string
 ): Promise<string> => {
   try {
-    const auth = getAuth(); // Firebase Auth 인스턴스
+    const auth = getAuth(); 
     if (!auth.currentUser) {
       console.error("인증 오류: 현재 사용자가 로그인되어 있지 않습니다.");
-      // 여기서 에러를 발생시켜 업로드를 시도조차 하지 않도록 방지
       throw new Error("User not authenticated.");
     }
 
-    // 토큰이 만료되었을 경우를 대비하여 토큰 강제 새로고침
     try {
         await auth.currentUser.getIdToken(true); 
-        console.log("Firebase ID 토큰 새로고침 완료");
+        console.log("토큰 새로고침 완료");
     } catch (error) {
         console.error("토큰 새로고침 실패:", error);
         throw new Error("Failed to refresh authentication token.");
@@ -31,13 +30,10 @@ export const uploadImage = async (
     const timestamp = Date.now();
     const fileName = `${userId}__${timestamp}_${file.name}`
     const storageRef = ref(storage, `projects/${projectId}/day-${dayNumber}/${fileName}`)
-
-    console.log('이미지 업로드 시작', fileName)
-    console.log('파일 크기 (bytes):', file.size);
-    console.log('파일 MIME 타입:', file.type);      
+    
     const uploadFile = await uploadBytes(storageRef, file);
     const imageUrl = await getDownloadURL(uploadFile.ref)
-    console.log('Storage 업로드 완료', imageUrl)
+    console.log('Storage 업로드 완료')
 
     const imageRef = collection(db, 'projects', projectId, 'images');
     const docRef = await addDoc(imageRef, {
@@ -50,7 +46,7 @@ export const uploadImage = async (
       uploadedAt: serverTimestamp(),
     })
 
-    console.log('Firestore 메타데이터 저장 완료', docRef.id);
+    console.log('이미지 메타데이터 저장 완료');
 
     return docRef.id
   } catch (error) {
@@ -59,6 +55,7 @@ export const uploadImage = async (
   }
 }
 
+// 특정 날짜 이미지 조회
 export const getDayImages = async (
   projectId: string,
   dayNumber: number,
@@ -92,6 +89,7 @@ export const getDayImages = async (
   }
 }
 
+// 이미지 삭제
 export const deleteImage = async(
   projectId: string,
   imageId: string,
@@ -105,7 +103,7 @@ export const deleteImage = async(
 
     const imageRef = doc(db, 'projects', projectId, 'images', imageId)
     await deleteDoc(imageRef);
-    console.log('Firestore 메타데이터 삭제 완료');
+    console.log('이미지 메타데이터 삭제 완료');
   } catch (error) {
     console.error('이미지 삭제 실패', error)
     throw error;

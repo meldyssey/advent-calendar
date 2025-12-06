@@ -4,7 +4,7 @@ import { db } from "./config";
 import { DEFAULT_THEMES } from "@/constants/themes";
 import { getUsers } from "./user";
 
-// Timestamp → Date 변환
+// Timestamp를 Date로 변환
 const timestampToDate = (timestamp: any): Date => {
   if (timestamp?.toDate) {
     return timestamp.toDate();
@@ -12,7 +12,7 @@ const timestampToDate = (timestamp: any): Date => {
   return new Date(timestamp);
 };
 
-// Firestore Project → ProjectData 변환
+// Firestore Project를 프론트에서 사용하는 ProjectData로 변환
 const convertProject = (id: string, data: any): ProjectData => {
   return {
     id,
@@ -42,8 +42,6 @@ export const createProject = async (params: CreateProjectParams): Promise<string
       totalDays: totalDays,
       createdAt: serverTimestamp(),
     });
-
-    console.log('projectId:', projectId)
 
     const padLength = String(totalDays).length;
     const daysCollectionRef = collection(db, 'projects', projectId, 'days');
@@ -77,6 +75,7 @@ export const createProject = async (params: CreateProjectParams): Promise<string
   }
 }
 
+// 사용자 프로젝트 모두 조회
 export const getMyProjects = async (userId: string): Promise<ProjectData[]> => {
   try {
     const projectsRef = collection(db, 'projects');
@@ -94,6 +93,7 @@ export const getMyProjects = async (userId: string): Promise<ProjectData[]> => {
   }
 };
 
+// 특정 프로젝트 조회
 export const getProject = async (projectId: string): Promise<ProjectData | null> => {
   try {
     const projectRef = doc(db, 'projects', projectId);
@@ -111,6 +111,7 @@ export const getProject = async (projectId: string): Promise<ProjectData | null>
   }
 };
 
+// 멤버 추가
 export const addMember = async (
   projectId: string,
   userId: string,
@@ -133,13 +134,14 @@ export const addMember = async (
       members: arrayUnion(userId)
     })
 
-    console.log('멤버 추가 완료', userId)
+    console.log('멤버 추가 완료')
   } catch (error) {
     console.error('멤버 추가 실패', error)
     throw error;
   }
 }
 
+// 멤버 조회
 export const getProjectMembers = async (
   projectId: string,
 ): Promise<UserInfo[]> => {

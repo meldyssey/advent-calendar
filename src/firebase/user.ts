@@ -2,6 +2,7 @@ import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firest
 import { db } from "./config";
 import type { UserInfo } from "@/types";
 
+// 사용자 정보 생성 및 업데이트
 export const createOrUpdateUser = async (
   uid: string,
   email: string | null,
@@ -21,7 +22,7 @@ export const createOrUpdateUser = async (
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       })
-      console.log('사용자 정보 저장 완료', uid)
+      console.log('사용자 정보 저장 완료')
     } else {
       await updateDoc(userRef, {
         email: email || userDoc.data().email,
@@ -36,6 +37,7 @@ export const createOrUpdateUser = async (
   }  
 }
 
+// 사용자 정보 조회
 export const getUser = async (
   uid: string,
 ): Promise<UserInfo | null> => {
@@ -60,6 +62,7 @@ export const getUser = async (
   }
 }
 
+// 여러 사용자 정보 조회
 export const getUsers = async (
   uids: string[]
 ): Promise<UserInfo[]> => {
