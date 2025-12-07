@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Label } from '@/components/ui/label';
@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Spinner } from '../ui/spinner';
 import { createProject } from '@/firebase/projects';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
+import { toast } from 'sonner';
 
 interface CreateProjectFormProps {
   onSuccess?: (projectId: string) => void;
@@ -16,6 +17,10 @@ interface CreateProjectFormProps {
 export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProps) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false)
+
+  const titleRef = useRef<HTMLInputElement>(null)
+  const dateRef = useRef<HTMLInputElement>(null)
+  const themeRefs = useRef<(HTMLInputElement | null)[]>([])  // 배열로 여러 input 관리
 
   const [title, setTitle] = useState('');
   const [dateType, setDateType] = useState<'start' | 'end'>('end');
@@ -32,7 +37,6 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
     setStartDate('');  // 초기화
     setEndDate('');    // 종료일도 초기화
     setDateError(false)
-    console.log("동작")
   }, [dateType])
 
   const todayToString = () => {
@@ -67,6 +71,30 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!user) return;
+
+    if(!title.trim()){
+      toast.error("프로젝트 제목을 입력해 주세요.")
+      titleRef.current?.focus();
+      titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    if(!startDate || !endDate){
+      toast.error("날짜를 확인해 주세요.")
+      dateRef.current?.focus();
+      dateRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    if(themeType === 'custom'){
+      const emptyThemeIndex = themes.findIndex(theme => !theme.trim());
+      if(emptyThemeIndex !== -1) {
+        toast.error(`D-${emptyThemeIndex === totalDays - 1 ? 'Day' : emptyThemeIndex + 1} 주제를 입력해 주세요.`)
+        themeRefs.current[emptyThemeIndex]?.focus();
+        themeRefs.current[emptyThemeIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      return;
+    }
 
     setLoading(true);
 
@@ -136,12 +164,12 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               프로젝트 제목
             </Label>
             <Input
+              ref={titleRef}
               id='title'
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder='예: 우리 가족 크리스마스 2025'
               className='mt-3 text-lg'
-              required
             />
           </div>
           <div className="bg-white rounded-lg p-8 shadow-sm space-y-6" >
@@ -172,9 +200,10 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               <div className='space-y-3'>
                 <Label>시작일 (D-{totalDays-1})</Label>
                 <Input
+                  ref={dateRef}
                   id='startDate'
                   type='date'
-                  value={startDate || todayToString()}
+                  value={startDate}
                   onChange={(e) => {
                     setStartDate(e.target.value);
                     calculateDate(e.target.value, 'start');
@@ -183,7 +212,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                   required
                 />
                 {endDate && (
-                  <p>
+                  <p className="text-sm text-slate-600">
                     종료일: {endDate} (D-Day, 자동 계산됨)
                   </p>
                 )}
@@ -192,9 +221,10 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               <div className='space-y-3'>
                 <Label>종료일 (D-Day)</Label>
                 <Input
+                  ref={dateRef}
                   id='endDate'
                   type='date'
-                  value={endDate || todayToString()}
+                  value={endDate}
                   onChange={(e) => {
                     setEndDate(e.target.value);
                     calculateDate(e.target.value, 'end');
@@ -229,7 +259,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Fruits</SelectLabel>
+                  <SelectLabel>주제 선택</SelectLabel>
                   <SelectItem value="default">기본주제</SelectItem>
                   <SelectItem value="custom">직접 입력하기</SelectItem>
                 </SelectGroup>
@@ -261,14 +291,20 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                           <div key={index} className="p-2 bg-white rounded">
                             D-Day
                             <br />
-                            <Input placeholder="주제를 입력하세요" />
+                            <Input
+                              ref={(el) => {themeRefs.current[index] = el}}
+                              value={themes[index] || ''}
+                              placeholder="주제를 입력하세요" 
+                              onChange={(e) => handleThemeInput(index, e.target.value)}
+                            />
                           </div>
                         )
                       }
                       return <div key={index} className="p-2 bg-white rounded">
                         D-{index + 1}
                         <br />
-                        <Input 
+                        <Input
+                          ref={(el) => {themeRefs.current[index] = el}}
                           placeholder="주제를 입력하세요"
                           value={themes[index] || ''}
                           onChange={(e) => handleThemeInput(index, e.target.value)}
@@ -296,7 +332,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
             )}
             <Button
               type="submit"
-              disabled={!title || !startDate || !endDate || loading || dateError}
+              disabled={loading || dateError}
               className="flex-1 h-14 text-lg"
             >
               {loading ? (<><Spinner/> 생성 중... </>) : '프로젝트 만들기'}

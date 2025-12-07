@@ -8,6 +8,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
 import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 import { JoinProjectPage } from "./pages/JoinProjectPage";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   const { user, loading } = useAuth();
@@ -44,6 +45,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />}/>
         </Routes>
       </main>
+      <Toaster position="top-center"/>
     </div>
   );
 }
