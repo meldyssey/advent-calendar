@@ -92,8 +92,8 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
         toast.error(`D-${emptyThemeIndex === totalDays - 1 ? 'Day' : emptyThemeIndex + 1} 주제를 입력해 주세요.`)
         themeRefs.current[emptyThemeIndex]?.focus();
         themeRefs.current[emptyThemeIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
         }
-      return;
     }
 
     setLoading(true);
