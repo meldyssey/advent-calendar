@@ -174,7 +174,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                 <Input
                   id='startDate'
                   type='date'
-                  value={startDate}
+                  value={startDate || todayToString()}
                   onChange={(e) => {
                     setStartDate(e.target.value);
                     calculateDate(e.target.value, 'start');
@@ -194,7 +194,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                 <Input
                   id='endDate'
                   type='date'
-                  value={endDate}
+                  value={endDate || todayToString()}
                   onChange={(e) => {
                     setEndDate(e.target.value);
                     calculateDate(e.target.value, 'end');
