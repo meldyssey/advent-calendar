@@ -108,12 +108,11 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
         customThemes: themes
       });
 
-      console.log('projectId: ', projectId)
-      alert('프로젝트 생성 성공')
+      toast('프로젝트 생성 성공')
       onSuccess?.(projectId);
     } catch(error){
       console.error('프로젝트 생성 실패: ', error);
-      alert('프로젝트 생성 실패')
+      toast('프로젝트 생성 실패')
     } finally {
       setLoading(false)
     }
