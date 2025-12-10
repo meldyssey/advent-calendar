@@ -1,13 +1,15 @@
 import { CalendarGrid } from '@/components/project/CalendarGrid';
 import { InviteModal } from '@/components/project/InviteModal';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { getDays } from '@/firebase/days';
-import { getProject } from '@/firebase/projects';
+import { deleteProject, getProject } from '@/firebase/projects';
 import { useAuth } from '@/hooks/useAuth';
 import type { DayData, ProjectData } from '@/types';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { toast } from 'sonner';
 
 export const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -89,6 +91,18 @@ export const ProjectDetailPage = () => {
   endDate.setHours(0, 0, 0, 0);
   const dDay = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
+  const hadleDeleteProject = async(projectId:string) => {
+
+    try {
+      await deleteProject(projectId)
+      toast('프로젝트가 삭제되었습니다.')
+      navigate(`/projects`)
+    } catch (error) {
+      console.error('프로젝트 삭제 실패: ', error);
+      toast('프로젝트 삭제에 실패했습니다.')
+    }
+  }
+
   return (
     <div className="">
       <div className="max-w-6xl mx-auto px-4">
@@ -118,12 +132,40 @@ export const ProjectDetailPage = () => {
               </span>
               {/* 초대 버튼 (생성자만) - 추가 */}
               {isCreator && (
-                <Button
-                  onClick={() => setIsInviteModalOpen(true)}
-                  className="ml-4"
-                >
-                  👥 친구 초대
-                </Button>
+                <div className="flex md:ml-auto gap-4">
+                  <Button
+                    onClick={() => setIsInviteModalOpen(true)}
+                    className='flex-1'
+                  >
+                    👥 친구 초대
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        className="flex-1"
+                        variant="secondary"
+                      >
+                        프로젝트 삭제
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>정말 프로젝트를 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          이 작업은 되돌릴 수 없습니다. 프로젝트의 모든 데이터가 완전히 삭제됩니다.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>취소</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => id && hadleDeleteProject(id)}
+                        >
+                          삭제
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               )}
             </div>
           </div>

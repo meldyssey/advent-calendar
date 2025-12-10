@@ -1,5 +1,5 @@
 import type { CreateProjectParams, ProjectData, UserInfo } from "@/types";
-import { arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "./config";
 import { DEFAULT_THEMES } from "@/constants/themes";
 import { getUsers } from "./user";
@@ -110,6 +110,20 @@ export const getProject = async (projectId: string): Promise<ProjectData | null>
     throw error;
   }
 };
+
+export const deleteProject = async (projectId: string): Promise<void> => {
+  try {
+    const projectRef = doc(db, 'projects', projectId);
+
+    await deleteDoc(projectRef)
+
+    console.log('프로젝트 삭제 완료')
+    
+  } catch (error) {
+    console.error('프로젝트 삭제 실패: ', error)
+    throw error;
+  }
+}
 
 // 멤버 추가
 export const addMember = async (
