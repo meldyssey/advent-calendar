@@ -141,12 +141,12 @@ export const ProjectDetailPage = () => {
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button
+                      {/* <Button
                         className="flex-1"
                         variant="secondary"
                       >
                         프로젝트 삭제
-                      </Button>
+                      </Button> */}
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
