@@ -1,7 +1,6 @@
 ## ✨ 소개 
 친구들과 함께 날짜별 테마에 맞춰 사진을 공유하며 추억을 만드는 어드벤트 캘린더 웹 애플리케이션
 
-
 ### 🎯 프로젝트 동기
 
 - 크리스마스 어드벤트 캘린더에서 영감을 받아 크리스마스에 사용하기 위해 개발
@@ -141,8 +140,8 @@ graph TD
       │  └─ 📄 {dayNumber}/
       │     ├─ dayNumber: number
       │     ├─ theme: string
-			│     ├─ themeIndex: number
-			│		  ├─ isOpened: boolean //결국 사용하지 않는 field
+	  │     ├─ themeIndex: number
+	  │		├─ isOpened: boolean //결국 사용하지 않는 field
       │     └─ date: timestamp
       │
       └─ 📂 images/
@@ -172,9 +171,17 @@ src/
 ```
 
 ---
+
+## 트러블슈팅
+- [Firebase Authentication 팝업 로그인 시 Cross-Origin-Opener-Policy(COOP) 오류](https://velog.io/@melcoding/%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-COOP)
+- [Firebase Authentication 리다이렉트 로그인 시 로그인되지 않고 초기 화면으로 돌아가는 문제](https://velog.io/@melcoding/sign-in-redirect-problem)
+- [개발 모드, 배포 모드 분기처리](https://velog.io/@melcoding/import.meta.env.MODE)
+
+---
+
 ## 추가 개발 예정 기능 사항
 - [x] 주제 직접 입력 기능
-- [ ] 프로젝트 삭제 기능
+- [x] 프로젝트 삭제 기능
 - [ ] 전체 진행 일자 사용자 설정 기능
 - [ ] 프로젝트 멤버 관리 기능
 - [ ] 내 정보 수정 기능
