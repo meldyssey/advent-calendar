@@ -1,5 +1,5 @@
 import { db, storage } from './config';
-import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import type { ImageData } from '@/types';
 import { getAuth } from 'firebase/auth';
@@ -19,13 +19,13 @@ export const uploadImage = async (
       throw new Error("User not authenticated.");
     }
 
-    try {
-        await auth.currentUser.getIdToken(true); 
-        console.log("토큰 새로고침 완료");
-    } catch (error) {
-        console.error("토큰 새로고침 실패:", error);
-        throw new Error("Failed to refresh authentication token.");
-    }
+    // try {
+    //     await auth.currentUser.getIdToken(true); 
+    //     console.log("토큰 새로고침 완료");
+    // } catch (error) {
+    //     console.error("토큰 새로고침 실패:", error);
+    //     throw new Error("Failed to refresh authentication token.");
+    // }
     
     const timestamp = Date.now();
     const fileName = `${userId}__${timestamp}_${file.name}`
@@ -108,4 +108,34 @@ export const deleteImage = async(
     console.error('이미지 삭제 실패', error)
     throw error;
   } 
+}
+
+export const deleteProjectImages = async(
+  projectId: string
+): Promise<void> => {
+  try {
+    const storageRef = ref(storage, `projects/${projectId}`)
+    const listResult = await listAll(storageRef);
+
+    // console.log(listResult.items)
+    // console.log(listResult.prefixes)
+
+    // 하위 폴더의 아이템 삭제
+    const deletePromises = listResult.prefixes.map(async (folderRef) => {
+      const folderList = await listAll(folderRef);
+      // console.log(folderList.items)
+
+      // 폴더 내 모든 파일 삭제
+      return Promise.all(
+        folderList.items.map(itemRef => deleteObject(itemRef))
+      );
+    });
+
+    await Promise.all(deletePromises);
+    console.log('프로젝트 이미지 삭제 완료');
+
+  } catch (error) {
+    console.error('프로젝트 이미지 삭제 실패', error);
+    throw error;
+  }
 }

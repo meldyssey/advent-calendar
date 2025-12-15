@@ -113,11 +113,26 @@ export const getProject = async (projectId: string): Promise<ProjectData | null>
 
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
+
+    // 하위 images 컬렉션 삭제
+    const imagesRef = collection(db, 'projects', projectId, 'images');
+    const imagesSnapshot = await getDocs(imagesRef);
+    // console.log(imagesSnapshot.docs)
+    const deleteImagesPromises = imagesSnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deleteImagesPromises);
+    console.log('images 컬렉션 삭제 완료');
+
+    // 하위 days 컬렉션 삭제
+    const daysRef = collection(db, 'projects', projectId, 'days');
+    const daysSnapshot = await getDocs(daysRef);
+    const deleteDaysPromises = daysSnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deleteDaysPromises);
+    console.log('days 컬렉션 삭제 완료');
+
+    // 프로젝트 문서 삭제
     const projectRef = doc(db, 'projects', projectId);
-
     await deleteDoc(projectRef)
-
-    console.log('프로젝트 삭제 완료')
+    console.log('프로젝트 문서 삭제 완료')
     
   } catch (error) {
     console.error('프로젝트 삭제 실패: ', error)

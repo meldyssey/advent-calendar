@@ -4,6 +4,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { getDays } from '@/firebase/days';
+import { deleteProjectImages } from '@/firebase/image';
 import { deleteProject, getProject } from '@/firebase/projects';
 import { useAuth } from '@/hooks/useAuth';
 import type { DayData, ProjectData } from '@/types';
@@ -94,6 +95,7 @@ export const ProjectDetailPage = () => {
   const hadleDeleteProject = async(projectId:string) => {
 
     try {
+      await deleteProjectImages(projectId)
       await deleteProject(projectId)
       toast('프로젝트가 삭제되었습니다.')
       navigate(`/projects`)
