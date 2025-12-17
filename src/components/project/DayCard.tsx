@@ -118,15 +118,21 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
                   <div key={index} className="aspect-square">
                     {hasImage ? (
                       // 이미지 있음: 썸네일 표시
-                      <div
-                        className="w-full h-full relative rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                        onClick={() => setIsDetailModalOpen(true)}
-                      >
-                        <img
-                          src={image.imageUrl}
-                          alt={`${image.userName}의 이미지`}
-                          className="w-full h-full object-cover"
-                        />
+                      <div className="w-full h-full flex flex-col">
+                        <div
+                          className="flex-1 relative rounded-t overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => setIsDetailModalOpen(true)}
+                        >
+                          <img
+                            src={image.imageUrl}
+                            alt={`${image.userName}의 이미지`}
+                            className="w-full h-full object-cover"
+                          />
+                          <div>{image.userName}</div>
+                        </div>
+                        <div className="text-sm text-center text-slate-600 py-1 bg-slate-50 rounded-b">
+                          👤 {image.userName}
+                        </div>
                       </div>
                     ) : (
                       // 이미지 없음: 업로드 UI 표시
