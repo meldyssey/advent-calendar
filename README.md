@@ -176,12 +176,13 @@ src/
 - [Firebase Authentication 팝업 로그인 시 Cross-Origin-Opener-Policy(COOP) 오류](https://velog.io/@melcoding/%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-COOP)
 - [Firebase Authentication 리다이렉트 로그인 시 로그인되지 않고 초기 화면으로 돌아가는 문제](https://velog.io/@melcoding/sign-in-redirect-problem)
 - [개발 모드, 배포 모드 분기처리](https://velog.io/@melcoding/import.meta.env.MODE)
-
+- [카카오톡 인앱 브라우저에서 구글 OAuth 로그인 차단 문제 해결](https://velog.io/@melcoding/kakaotalk-in-app-google-OAuth)
 ---
 
 ## 추가 개발 예정 기능 사항
 - [x] 주제 직접 입력 기능
 - [x] 프로젝트 삭제 기능
+- [x] 이미지 하단에 이미지 올린 사용자명 추가
 - [ ] 전체 진행 일자 사용자 설정 기능
 - [ ] 프로젝트 멤버 관리 기능
 - [ ] 내 정보 수정 기능
