@@ -177,6 +177,7 @@ src/
 - [Firebase Authentication 리다이렉트 로그인 시 로그인되지 않고 초기 화면으로 돌아가는 문제](https://velog.io/@melcoding/sign-in-redirect-problem)
 - [개발 모드, 배포 모드 분기처리](https://velog.io/@melcoding/import.meta.env.MODE)
 - [카카오톡 인앱 브라우저에서 구글 OAuth 로그인 차단 문제 해결](https://velog.io/@melcoding/kakaotalk-in-app-google-OAuth)
+- [Firestore 프로젝트 삭제 시 관련 데이터 정리 누락 해결](https://velog.io/@melcoding/firestore-delete-project)
 ---
 
 ## 추가 개발 예정 기능 사항
