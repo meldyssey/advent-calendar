@@ -9,10 +9,19 @@ import { CreateProjectPage } from "./pages/CreateProjectPage";
 import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 import { JoinProjectPage } from "./pages/JoinProjectPage";
 import { Toaster } from "./components/ui/sonner";
+import { useEffect } from "react";
+import { isKakaoTalkBrowser, openInExternalBrwoser } from "@/lib/browserDetect";
 
 function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
+
+  // 카카오톡 브라우저 체크
+  useEffect(() => {
+    if (isKakaoTalkBrowser()) {
+      openInExternalBrwoser();
+    }
+  }, []);
 
   if (loading) {
     return (
