@@ -130,7 +130,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
                           />
                           <div>{image.userName}</div>
                         </div>
-                        <div className="text-sm text-center text-slate-600 py-1 bg-slate-50 rounded-b">
+                        <div className="text-xs text-center text-slate-600 py-1 bg-slate-50 rounded-b md:text-sm">
                           👤 {image.userName}
                         </div>
                       </div>
