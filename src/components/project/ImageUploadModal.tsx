@@ -145,11 +145,11 @@ export const ImageUploadModal = ({
         ) : (
           <div className="mb-4">
             {/* 미리보기 */}
-            <div className="relative">
+            <div className="relative h-[60vh] bg-slate-100 rounded-lg flex items-center justify-center">
               <img
                 src={preview}
                 alt="Preview"
-                className="w-full rounded-lg"
+                className="max-w-full max-h-full object-contain rounded-lg"
               />
               <button
                 onClick={() => {

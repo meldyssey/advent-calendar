@@ -98,11 +98,11 @@ export const ImageDetailModal = ({
               D-{totalDays - dayNumber}: {dayTheme}
             </h1>
           </div>     
-          <div className="relative flex-shrink-0">
+          <div className="relative flex-shrink-0 h-[60vh] bg-slate-100 flex items-center justify-center">
             <img
               src={currentImage.imageUrl}
               alt={`Day ${dayNumber} - ${dayTheme}`}
-              className="w-full h-auto max-h-[50vh] object-contain bg-slate-100"
+              className="max-w-full max-h-full object-contain"
             />
 
             {/* 이전/다음 버튼 (이미지가 여러 개일 때만) */}
