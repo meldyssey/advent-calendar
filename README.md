@@ -178,6 +178,8 @@ src/
 - [개발 모드, 배포 모드 분기처리](https://velog.io/@melcoding/import.meta.env.MODE)
 - [카카오톡 인앱 브라우저에서 구글 OAuth 로그인 차단 문제 해결](https://velog.io/@melcoding/kakaotalk-in-app-google-OAuth)
 - [Firestore 프로젝트 삭제 시 관련 데이터 정리 누락 해결](https://velog.io/@melcoding/firestore-delete-project)
+- [카카오톡 브라우저 감지 로직 위치로 인한 접근 차단 문제](https://velog.io/@melcoding/troubleshooting-kakao-browser-detect-location)
+- [이미지 모달 높이 고정으로 긴 이미지 사용성 개선](https://velog.io/@melcoding/troubleshooting-image-modal-size)
 ---
 
 ## 추가 개발 예정 기능 사항
