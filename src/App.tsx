@@ -46,7 +46,6 @@ function App() {
       <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage/>}/>
-          <Route path="/login" element={<LoginForm/>}/>
           <Route path="/projects" element={<ProjectListPage/>}/>
           <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
           <Route path="/projects/new" element={<CreateProjectPage/>}/>

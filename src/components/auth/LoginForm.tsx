@@ -40,10 +40,10 @@ export const LoginForm = ({returnUrl}: LoginFormProps) => {
   }
 
   return (
-    <div className="h-full flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>로그인</CardTitle>
           <CardDescription>
             구글계정으로 로그인해주세요.
           </CardDescription>
@@ -55,7 +55,9 @@ export const LoginForm = ({returnUrl}: LoginFormProps) => {
             onClick={handleGoogleLogin}
             disabled={loading}
           >
-            {loading ? (<><Spinner/>로그인 중...</>) : 'Login with Google'}
+            {loading ? (<><Spinner/>로그인 중...</>) : <>
+                Google로 계속하기
+              </>}
           </Button>
         </CardFooter>
       </Card>
