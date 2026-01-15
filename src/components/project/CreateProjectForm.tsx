@@ -29,8 +29,9 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
   const [dateError, setDateError] = useState(false)
   const [themeType, setThemeType] = useState('default')
   const [themes, setThemes] = useState<string[]>([...DEFAULT_THEMES])
+  const [totalDays, setTotalDays] = useState<number>(25)
 
-  const totalDays = 25
+  // const totalDays = 25
   // const themes = DEFAULT_THEMES
 
   useEffect(() => {
@@ -38,6 +39,17 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
     setEndDate('');    // 종료일도 초기화
     setDateError(false)
   }, [dateType])
+
+  useEffect(() => {
+    // totalDays가 변경되면 themeType을 조건부로 설정
+    if (totalDays === 25) {
+      setThemeType('default')
+      setThemes([...DEFAULT_THEMES])
+    } else {
+      setThemeType('custom')
+      setThemes(Array(totalDays).fill(''))
+    }
+  }, [totalDays])
 
   const todayToString = () => {
     const today = new Date()
@@ -171,6 +183,25 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               className='mt-3 text-lg'
             />
           </div>
+          <div className="bg-white rounded-lg p-8 shadow-sm">
+            <Label htmlFor='title' className='text-lg font-semibold'>
+              프로젝트 기간(총 일수)
+            </Label>
+            <Select
+              value={totalDays.toString()}
+              onValueChange={(value)=>{setTotalDays(Number(value))}}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="프로젝트 기간(총 일수)을 선택해주세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>프로젝트 기간 선택</SelectLabel>
+                  {new Array(31).fill(0).map((_, idx) => <SelectItem key={idx} value={(idx+1).toString()}>{idx+1}일</SelectItem>)}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="bg-white rounded-lg p-8 shadow-sm space-y-6" >
             <h2 className='text-lg font-semibold'>
               날짜 설정
@@ -247,7 +278,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
           </div>
           <div className="bg-white rounded-lg p-8 shadow-sm space-y-6" >
             <h2 className='text-lg font-semibold'>
-              날짜 설정
+              주제 설정
             </h2>
             <Select
               value={themeType}
@@ -259,7 +290,10 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>주제 선택</SelectLabel>
+                  {totalDays === 25 ? 
                   <SelectItem value="default">기본주제</SelectItem>
+                  : <></>
+                  }
                   <SelectItem value="custom">직접 입력하기</SelectItem>
                 </SelectGroup>
               </SelectContent>
