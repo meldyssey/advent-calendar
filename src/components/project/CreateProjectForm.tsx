@@ -49,6 +49,13 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
       setThemeType('custom')
       setThemes(Array(totalDays).fill(''))
     }
+
+    // 날짜가 이미 입력되어 있다면 재계산
+    if (dateType === 'start' && startDate) {
+      calculateDate(startDate, 'start')
+    } else if (dateType === 'end' && endDate) {
+      calculateDate(endDate, 'end')
+    }
   }, [totalDays])
 
   const todayToString = () => {
@@ -334,7 +341,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
                         )
                       }
                       return <div key={index} className="p-2 bg-white rounded">
-                        D-{index + 1}
+                        D-{totalDays - index -1}
                         <br />
                         <Input
                           ref={(el) => {themeRefs.current[index] = el}}
