@@ -55,7 +55,7 @@ export const HomePage = () => {
             </CardContent>
           </Card>
         ) : (
-          <Card className="max-w-md mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
+          <Card className="max-w-xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
           <CardHeader className="text-center">
             <div className="text-6xl mb-4">🎁</div>
             <CardTitle className="text-2xl">시작하기</CardTitle>
