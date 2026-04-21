@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Label } from '@/components/ui/label';
@@ -23,8 +23,8 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
   const themeRefs = useRef<(HTMLInputElement | null)[]>([])  // 배열로 여러 input 관리
 
   const [title, setTitle] = useState('');
-  const [dateType, setDateType] = useState<'start' | 'end'>('end');
-  const [startDate, setStartDate] = useState('');
+  const [dateType, setDateType] = useState<'start' | 'end'>('start');
+  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
   const [endDate, setEndDate] = useState('');
   const [dateError, setDateError] = useState(false)
   const [themeType, setThemeType] = useState('default')
@@ -34,12 +34,30 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
   // const totalDays = 25
   // const themes = DEFAULT_THEMES
 
-  useEffect(() => {
-    setStartDate('');  // 초기화
-    setEndDate('');    // 종료일도 초기화
+  const calculateDate = useCallback((date: string, type: 'start' | 'end') => {
+    const selectedDate = new Date(date)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    if(type === 'start') {
+      const calculatedEnd = new Date(selectedDate)
+      calculatedEnd.setDate(selectedDate.getDate() + (totalDays - 1))
+      // console.log(calculatedEnd.toISOString().split("T")[0])
+      setEndDate(calculatedEnd.toISOString().split("T")[0])
+    } else {
+      const calculatedStart = new Date(selectedDate)
+      calculatedStart.setDate(selectedDate.getDate() - (totalDays - 1))
+      // if(calculatedStart < today){
+      //   setDateError(true);
+      //   alert('시작일이 오늘보다 이전일 수 없습니다. 날짜를 다시 선택해주세요.');
+      //   setStartDate('');  // 초기화
+      //   setEndDate('');    // 종료일도 초기화
+      //   return;
+      // } 
+    setStartDate(calculatedStart.toISOString().split("T")[0])
     setDateError(false)
-  }, [dateType])
-
+    }
+  }, [totalDays])
+  
   useEffect(() => {
     // totalDays가 변경되면 themeType을 조건부로 설정
     if (totalDays === 25) {
@@ -49,14 +67,17 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
       setThemeType('custom')
       setThemes(Array(totalDays).fill(''))
     }
+  }, [totalDays])
 
+
+  useEffect(() => {
     // 날짜가 이미 입력되어 있다면 재계산
     if (dateType === 'start' && startDate) {
       calculateDate(startDate, 'start')
     } else if (dateType === 'end' && endDate) {
       calculateDate(endDate, 'end')
     }
-  }, [totalDays])
+  }, [dateType, startDate, endDate, calculateDate])
 
   const todayToString = () => {
     const today = new Date()
@@ -134,31 +155,6 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
       toast('프로젝트 생성 실패')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const calculateDate = (date: string, type: 'start' | 'end') => {
-    const selectedDate = new Date(date)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    todayToString()
-    if(type === 'start') {
-      const calculatedEnd = new Date(selectedDate)
-      calculatedEnd.setDate(selectedDate.getDate() + (totalDays - 1))
-      // console.log(calculatedEnd.toISOString().split("T")[0])
-      setEndDate(calculatedEnd.toISOString().split("T")[0])
-    } else {
-      const calculatedStart = new Date(selectedDate)
-      calculatedStart.setDate(selectedDate.getDate() - (totalDays - 1))
-      // if(calculatedStart < today){
-      //   setDateError(true);
-      //   alert('시작일이 오늘보다 이전일 수 없습니다. 날짜를 다시 선택해주세요.');
-      //   setStartDate('');  // 초기화
-      //   setEndDate('');    // 종료일도 초기화
-      //   return;
-      // } 
-    setStartDate(calculatedStart.toISOString().split("T")[0])
-    setDateError(false)
     }
   }
 
