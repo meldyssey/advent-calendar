@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 export const CreateProjectPage = () => {
   const navigate = useNavigate();
-  const onSuccess = (projectId: String) => {
+  const onSuccess = (projectId: string) => {
     navigate(`/projects/${projectId}`)
   }
   return (
