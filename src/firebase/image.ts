@@ -33,8 +33,6 @@ export const uploadImage = async (
     
     const uploadFile = await uploadBytes(storageRef, file);
     const imageUrl = await getDownloadURL(uploadFile.ref)
-    console.log('Storage 업로드 완료')
-
     const imageRef = collection(db, 'projects', projectId, 'images');
     const docRef = await addDoc(imageRef, {
       projectId,
@@ -45,8 +43,6 @@ export const uploadImage = async (
       storagePath: uploadFile.ref.fullPath,
       uploadedAt: serverTimestamp(),
     })
-
-    console.log('이미지 메타데이터 저장 완료');
 
     return docRef.id
   } catch (error) {
@@ -84,7 +80,7 @@ export const getDayImages = async (
       };
     })
   } catch (error) {
-    console.log('이미지 조회 실패', error);
+    console.error('이미지 조회 실패', error);
     throw error
   }
 }
@@ -99,11 +95,8 @@ export const deleteImage = async(
 
     const storageRef = ref(storage, storagePath);
     await deleteObject(storageRef);
-    console.log('이미지 삭제 완료');
-
     const imageRef = doc(db, 'projects', projectId, 'images', imageId)
     await deleteDoc(imageRef);
-    console.log('이미지 메타데이터 삭제 완료');
   } catch (error) {
     console.error('이미지 삭제 실패', error)
     throw error;
@@ -132,7 +125,6 @@ export const deleteProjectImages = async(
     });
 
     await Promise.all(deletePromises);
-    console.log('프로젝트 이미지 삭제 완료');
 
   } catch (error) {
     console.error('프로젝트 이미지 삭제 실패', error);

@@ -18,10 +18,8 @@ export const signInWithGoogle = async (): Promise<void> => {
 
     if (import.meta.env.MODE === 'production') {
       await signInWithRedirect(auth, provider);
-      console.log('리다이렉트 로그인 시작');
     } else {
       await signInWithPopup(auth, provider);
-      console.log('팝업 로그인 완료');
     }
   } catch (error) {
     console.error('로그인 실패', error);
@@ -44,7 +42,6 @@ export const getGoogleRedirectResult = async (): Promise<User | null> => {
 export const logout = async (): Promise<void> => {
   try{
     await auth.signOut();
-    console.log('로그아웃 성공');
   } catch (error) {
     console.error('로그아웃 실패', error);
     throw error;

@@ -97,8 +97,6 @@ export const ImageUploadModal = ({
       clearInterval(interval);
       setUploadProgress(100);
 
-      console.log('✅ 업로드 완료!');
-      
       // 성공 후 처리
       setTimeout(() => {
         onSuccess();

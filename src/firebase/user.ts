@@ -22,7 +22,6 @@ export const createOrUpdateUser = async (
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       })
-      console.log('사용자 정보 저장 완료')
     } else {
       await updateDoc(userRef, {
         email: email || userDoc.data().email,

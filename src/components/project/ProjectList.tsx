@@ -17,7 +17,6 @@ export const ProjectList = () => {
       try {
         const data = await getMyProjects(user.uid);
         setProjects(data);
-        console.log('프로젝트 목록 로딩 성공');
       } catch (error) {
         console.error('프로젝트 로딩 실패', error);
       } finally {

@@ -58,9 +58,7 @@ export const ImageDetailModal = ({
       setDeleting(true);
       
       await deleteImage(projectId, currentImage.id, currentImage.storagePath);
-      
-      console.log('이미지 삭제 완료');
-      
+
       // 삭제 후 처리
       if (onDelete) {
         onDelete();

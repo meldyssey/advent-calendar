@@ -20,7 +20,6 @@ export const useAuth = () => {
         try {
           const redirectUser = await getGoogleRedirectResult();
           if (redirectUser) {
-            console.log('리다이렉트 로그인 성공 (useAuth):', redirectUser);
             if (isMounted.current) { // 컴포넌트가 마운트된 상태에서만 상태 업데이트
               await createOrUpdateUser(
                 redirectUser.uid,

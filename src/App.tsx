@@ -3,14 +3,15 @@ import { Spinner } from "./components/ui/spinner";
 import { LoginForm } from "./components/auth/LoginForm";
 import { HomePage } from './pages/HomePage';
 import { Header } from "./components/layout/Header";
-import { ProjectListPage } from "./pages/ProjectListPage";
 import { Navigate, Route, Routes, useLocation } from "react-router";
-import { CreateProjectPage } from "./pages/CreateProjectPage";
-import { ProjectDetailPage } from "./pages/ProjectDetailPage";
-import { JoinProjectPage } from "./pages/JoinProjectPage";
 import { Toaster } from "./components/ui/sonner";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { isKakaoTalkBrowser, openInExternalBrwoser } from "@/lib/browserDetect";
+
+const ProjectListPage = lazy(() => import('./pages/ProjectListPage').then(m => ({ default: m.ProjectListPage })));
+const CreateProjectPage = lazy(() => import('./pages/CreateProjectPage').then(m => ({ default: m.CreateProjectPage })));
+const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage').then(m => ({ default: m.ProjectDetailPage })));
+const JoinProjectPage = lazy(() => import('./pages/JoinProjectPage').then(m => ({ default: m.JoinProjectPage })));
 
 function App() {
   const { user, loading } = useAuth();
@@ -44,14 +45,16 @@ function App() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 flex flex-col">
-        <Routes>
-          <Route path="/" element={<HomePage/>}/>
-          <Route path="/projects" element={<ProjectListPage/>}/>
-          <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
-          <Route path="/projects/new" element={<CreateProjectPage/>}/>
-          <Route path="/join/:id" element={<JoinProjectPage/>}/>
-          <Route path="*" element={<Navigate to="/" replace />}/>
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen flex flex-col items-center justify-center"><Spinner /></div>}>
+          <Routes>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/projects" element={<ProjectListPage/>}/>
+            <Route path="/projects/:id" element={<ProjectDetailPage/>}/>
+            <Route path="/projects/new" element={<CreateProjectPage/>}/>
+            <Route path="/join/:id" element={<JoinProjectPage/>}/>
+            <Route path="*" element={<Navigate to="/" replace />}/>
+          </Routes>
+        </Suspense>
       </main>
       <Toaster position="top-center"/>
     </div>
