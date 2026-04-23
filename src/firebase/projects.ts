@@ -67,8 +67,7 @@ export const createProject = async (params: CreateProjectParams): Promise<string
     }
 
     await Promise.all(dayPromises);
-    console.log('days 서브컬렉션 생성 완료');
-    return projectId; 
+    return projectId;
   } catch (error) {
     console.error('프로젝트 생성 실패:', error);
     throw error;
@@ -120,19 +119,16 @@ export const deleteProject = async (projectId: string): Promise<void> => {
     // console.log(imagesSnapshot.docs)
     const deleteImagesPromises = imagesSnapshot.docs.map(doc => deleteDoc(doc.ref));
     await Promise.all(deleteImagesPromises);
-    console.log('images 컬렉션 삭제 완료');
 
     // 하위 days 컬렉션 삭제
     const daysRef = collection(db, 'projects', projectId, 'days');
     const daysSnapshot = await getDocs(daysRef);
     const deleteDaysPromises = daysSnapshot.docs.map(doc => deleteDoc(doc.ref));
     await Promise.all(deleteDaysPromises);
-    console.log('days 컬렉션 삭제 완료');
 
     // 프로젝트 문서 삭제
     const projectRef = doc(db, 'projects', projectId);
-    await deleteDoc(projectRef)
-    console.log('프로젝트 문서 삭제 완료')
+    await deleteDoc(projectRef);
     
   } catch (error) {
     console.error('프로젝트 삭제 실패: ', error)
@@ -163,7 +159,6 @@ export const addMember = async (
       members: arrayUnion(userId)
     })
 
-    console.log('멤버 추가 완료')
   } catch (error) {
     console.error('멤버 추가 실패', error)
     throw error;
