@@ -182,6 +182,12 @@ src/
 - [이미지 모달 높이 고정으로 긴 이미지 사용성 개선](https://velog.io/@melcoding/troubleshooting-image-modal-size)
 ---
 
+## 리팩토링
+
+[Advent Calendar 번들 최적화로 모바일 메인 로딩 시간 단축](https://velog.io/@melcoding/refactoring-advent-calendar-bundle-size-optimization)
+
+---
+
 ## 추가 개발 예정 기능 사항
 - [x] 주제 직접 입력 기능
 - [x] 프로젝트 삭제 기능
