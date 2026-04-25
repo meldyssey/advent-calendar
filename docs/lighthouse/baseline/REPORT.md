@@ -70,12 +70,3 @@
 
 ### SEO
 - 전 페이지 82~83점 — meta description 미설정 가능성
-
----
-
-## 다음 액션
-- [ ] 번들 최적화 브랜치 PR → main 머지 후 재측정
-- [ ] CLS 원인 파악 (인증 상태 전환 시 레이아웃 처리)
-- [ ] 프로젝트 상세 LCP 병목 개선 (Firebase 데이터 fetching 최적화)
-- [ ] 프로젝트 생성 접근성 88점 원인 확인
-- [ ] SEO meta description 추가
