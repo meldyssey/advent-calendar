@@ -106,89 +106,92 @@ export const ProjectDetailPage = () => {
   }
 
   return (
-    <div className="">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* 헤더 */}
-        <div className="mb-8">
-          <Button
-            onClick={() => navigate('/projects')}
-            variant="ghost"
-            className="mb-4"
-          >
-            ← 목록으로
-          </Button>
+    <>
+      <meta name="description" content={`${project.title} — 날짜별 사진을 공유하는 어드벤트 캘린더`} />
+      <div className="">
+        <div className="max-w-6xl mx-auto px-4">
+          {/* 헤더 */}
+          <div className="mb-8">
+            <Button
+              onClick={() => navigate('/projects')}
+              variant="ghost"
+              className="mb-4"
+            >
+              ← 목록으로
+            </Button>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">
-              {project.title}
-            </h1>
-            <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:items-center text-slate-600">
-              <span>
-                📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
-              </span>
-              <span className="text-lg font-semibold text-blue-600">
-                {dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : '종료'}
-              </span>
-              <span>
-                👥 {project.members.length}명
-              </span>
-              {/* 초대 버튼 (생성자만) - 추가 */}
-              {isCreator && (
-                <div className="flex md:ml-auto gap-4">
-                  <Button
-                    onClick={() => setIsInviteModalOpen(true)}
-                    className='flex-1'
-                  >
-                    👥 친구 초대
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        className="flex-1"
-                        variant="secondary"
-                      >
-                        프로젝트 삭제
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>정말 프로젝트를 삭제하시겠습니까?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          이 작업은 되돌릴 수 없습니다. 프로젝트의 모든 데이터가 완전히 삭제됩니다.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>취소</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => id && hadleDeleteProject(id)}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                {project.title}
+              </h1>
+              <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:items-center text-slate-600">
+                <span>
+                  📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
+                </span>
+                <span className="text-lg font-semibold text-blue-600">
+                  {dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : '종료'}
+                </span>
+                <span>
+                  👥 {project.members.length}명
+                </span>
+                {/* 초대 버튼 (생성자만) - 추가 */}
+                {isCreator && (
+                  <div className="flex md:ml-auto gap-4">
+                    <Button
+                      onClick={() => setIsInviteModalOpen(true)}
+                      className='flex-1'
+                    >
+                      👥 친구 초대
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          className="flex-1"
+                          variant="secondary"
                         >
-                          삭제
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              )}
+                          프로젝트 삭제
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>정말 프로젝트를 삭제하시겠습니까?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            이 작업은 되돌릴 수 없습니다. 프로젝트의 모든 데이터가 완전히 삭제됩니다.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>취소</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => id && hadleDeleteProject(id)}
+                          >
+                            삭제
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
+              </div>
             </div>
+            
           </div>
-          
-        </div>
 
-        {/* 캘린더 그리드 */}
-        <CalendarGrid
-          days={days}
-          projectId={id!}
-          totalDays={project.totalDays}
-          memberCount={project.members.length}
-        />
+          {/* 캘린더 그리드 */}
+          <CalendarGrid
+            days={days}
+            projectId={id!}
+            totalDays={project.totalDays}
+            memberCount={project.members.length}
+          />
+        </div>
+        {/* 초대 모달 - 추가 */}
+        {isInviteModalOpen && (
+          <InviteModal
+            projectId={id!}
+            onClose={() => setIsInviteModalOpen(false)}
+          />
+        )}
       </div>
-      {/* 초대 모달 - 추가 */}
-      {isInviteModalOpen && (
-        <InviteModal
-          projectId={id!}
-          onClose={() => setIsInviteModalOpen(false)}
-        />
-      )}
-    </div>
+    </>
   )
 }
