@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { getMyProjects } from '@/firebase/projects';
 import type { ProjectData } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { Spinner } from '../ui/spinner';
 import { ProjectCard } from './ProjectCard';
+import GlobalLoader from '../GlobalLoader';
 
 export const ProjectList = () => {
   const { user } = useAuth();
@@ -29,10 +29,7 @@ export const ProjectList = () => {
   
   if (loading) {
     return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <Spinner />
-        <p className="text-sm text-slate-600 mt-4">프로젝트를 불러오는 중...</p>
-      </div>      
+      <GlobalLoader/>
     )
   }
 
