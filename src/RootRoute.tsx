@@ -1,8 +1,9 @@
 import { Navigate, Route, Routes } from "react-router";
 import { HomePage } from "./pages/HomePage";
 
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import MemberOnlyLayout from "./components/layout/MemberOnlyLayout";
+import GlobalLoader from "./components/GlobalLoader";
 
 const ProjectListPage = lazy(() =>
   import("./pages/ProjectListPage").then((m) => ({
@@ -27,17 +28,19 @@ const JoinProjectPage = lazy(() =>
 
 export default function RootRoute() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/join/:id" element={<JoinProjectPage />} />
+    <Suspense fallback={<GlobalLoader />}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/join/:id" element={<JoinProjectPage />} />
 
-      <Route element={<MemberOnlyLayout />}>
-        <Route path="/projects" element={<ProjectListPage />} />
-        <Route path="/projects/:id" element={<ProjectDetailPage />} />
-        <Route path="/projects/new" element={<CreateProjectPage />} />
-      </Route>
+        <Route element={<MemberOnlyLayout />}>
+          <Route path="/projects" element={<ProjectListPage />} />
+          <Route path="/projects/:id" element={<ProjectDetailPage />} />
+          <Route path="/projects/new" element={<CreateProjectPage />} />
+        </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   );
 }

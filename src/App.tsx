@@ -3,7 +3,7 @@ import { LoginForm } from "./components/auth/LoginForm";
 import { Header } from "./components/layout/Header";
 import { useLocation } from "react-router";
 import { Toaster } from "./components/ui/sonner";
-import { useEffect, Suspense } from "react";
+import { useEffect } from "react";
 import { isKakaoTalkBrowser, openInExternalBrwoser } from "@/lib/browserDetect";
 import GlobalLoader from "./components/GlobalLoader";
 import RootRoute from "./RootRoute";
@@ -35,9 +35,7 @@ function App() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex flex-1 flex-col">
-        <Suspense fallback={<GlobalLoader />}>
-          <RootRoute />
-        </Suspense>
+        <RootRoute />
       </main>
       <Toaster position="top-center" />
     </div>
