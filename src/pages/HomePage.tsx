@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useState } from 'react';
+import logo from "@/assets/logo.png"
 
 export const HomePage = () => {
   const { user } = useAuth();
@@ -17,7 +18,7 @@ export const HomePage = () => {
         <div className="max-w-4xl mx-auto">
           {/* 로고 + 환영메시지 */}
           <img 
-            src="/images/logo.png" 
+            src={logo}
             alt="Logo" 
             className="w-full max-w-xl mx-auto"
           />
