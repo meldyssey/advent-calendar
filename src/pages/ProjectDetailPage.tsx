@@ -1,8 +1,8 @@
-import GlobalLoader from '@/components/GlobalLoader';
 import { CalendarGrid } from '@/components/project/CalendarGrid';
 import { InviteModal } from '@/components/project/InviteModal';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { getDays } from '@/firebase/days';
 import { deleteProjectImages } from '@/firebase/image';
 import { deleteProject, getProject } from '@/firebase/projects';
@@ -60,7 +60,10 @@ export const ProjectDetailPage = () => {
   
   if (loading) {
     return (
-      <GlobalLoader/>
+      <div className="h-full flex flex-col items-center justify-center">
+        <Spinner />
+        <p className="text-sm text-slate-600 mt-4">프로젝트를 불러오는 중...</p>
+      </div>      
     )
   }
 
