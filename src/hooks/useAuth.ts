@@ -42,6 +42,7 @@ export const useAuth = () => {
 
       // onAuthStateChanged 리스너는 항상 설정
       const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        console.log('onAuthStateChanged 실행됨'); // 몇 번 찍히는지 확인
         if (!isMounted.current) return; // 컴포넌트가 언마운트되면 상태 업데이트 방지
 
         if (currentUser) {
