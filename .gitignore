@@ -32,3 +32,6 @@ stats.html
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase
+.firebase
