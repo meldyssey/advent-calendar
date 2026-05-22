@@ -7,6 +7,7 @@ import { LoginForm } from "./components/auth/LoginForm";
 import { isKakaoTalkBrowser, openInExternalBrwoser } from "./lib/browserDetect";
 import { useAuth } from "./hooks/useAuth";
 import GlobalLayout from "./components/layout/GlobalLayout";
+import GlobalLoader from "./components/layout/GlobalLoader";
 
 const ProjectListPage = lazy(() =>
   import("./pages/ProjectListPage").then((m) => ({
@@ -41,12 +42,7 @@ export default function RootRoute() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <Spinner />
-        <p className="text-sm text-slate-600 mt-4">로딩 중...</p>
-      </div>
-    );
+    return <GlobalLoader />;
   }
 
   const isProjectPath = location.pathname.startsWith("/projects");
