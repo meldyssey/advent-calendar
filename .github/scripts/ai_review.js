@@ -33,8 +33,6 @@
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const model = "gpt-5.1-codex-mini"
-
     const prompt = `You are a senior React/TypeScript developer. Please review the PR diff below and respond in Korean.
 Project: React 19 + TypeScript + Firebase + Tailwind CSS advent calendar app
 
@@ -62,10 +60,13 @@ If overall looks good, a short compliment is fine. Keep feedback concise and act
   ${diff}
   \`\`\`
   ${truncated ? "\n> ⚠️  diff가 너무 커서 앞부분만 리뷰되었습니다." : ""}`;
+
+    const model = "gpt-5.1-codex-mini"
     const context = [
       { role: 'user', content: prompt }
     ];
-    const response = await client.response.create({
+
+    const response = await client.responses.create({
       model: model,
       input: context,
       max_output_tokens: 2000,
