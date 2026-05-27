@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,6 +17,15 @@ interface LoginModalProps {
 
 export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [loading, setLoading] = useState(false);
+
+  // pageshow 이벤트 추가 (뒤로가기 로딩 버그 수정)
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setLoading(false);
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
