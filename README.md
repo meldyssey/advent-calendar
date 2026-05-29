@@ -9,10 +9,9 @@
 
 ### 📅 기간
 
-- [x]  개발: 2025.11.25 - 2025.12.01
-- [x]  배포: 2025.12.01
-- [ ]  알파테스트: 2025.12.01 - 2025.01.31
-- [ ]  베타테스트: 2025.02.01 - 2026.02.28
+- 개발: 2025.11.25 - 2025.12.01
+- 배포: 2025.12.01
+- 유지보수: 2025.12.01 - 현재
 
 ### 👤 개발 인원
 
@@ -30,6 +29,9 @@
 - Google 소셜 로그인
 - Firebase Authentication 기반 안전한 인증
 - 사용자 프로필 자동 동기화
+- Context/Provider 패턴 기반 전역 인증 상태 관리
+- 라우팅 가드 (비로그인 사용자 프로젝트 페이지 접근 차단)
+- 로고 애니메이션 전역 로딩 화면
 
 ### 프로젝트 관리
 
@@ -81,6 +83,7 @@
 - Vite (빌드 도구)
 - Git & GitHub (형상 관리)
 - Firebase Hosting (배포)
+- GitHub Actions (CI/CD: Firebase 자동 배포, AI PR 코드 리뷰)
 
 ### 해당 기술들 선택 이유
 >사용을 위해 궁극적으로 짧은 기간에 배포 완료까지 필요한 프로젝트여서 빠르게 개발할 수 있는 기술을 선택
@@ -134,6 +137,7 @@ graph TD
       ├─ startDate: timestamp
       ├─ endDate: timestamp
       ├─ totalDays: number
+      ├─ isCustomTheme: boolean
       ├─ createdAt: timestamp
       │
       ├─ 📂 days/
@@ -160,40 +164,48 @@ graph TD
 ```
 src/
 ├── components/      # 재사용 가능한 UI 컴포넌트
-│   ├── auth/       # 인증 관련
-│   ├── layout/     # 레이아웃(헤더 등)
+│   ├── auth/       # 인증 관련 (LoginForm, LoginModal)
+│   ├── layout/     # 레이아웃 (Header, GlobalLayout, GlobalLoader)
 │   └── project/    # 프로젝트 관련
 ├── pages/          # 라우트 페이지
+├── context/        # React Context (AuthContext)
+├── provider/       # Context Provider (AuthProvider)
 ├── firebase/       # Firebase 로직 분리
 ├── hooks/          # Custom Hooks
+├── lib/            # 유틸리티 (utils, browserDetect)
 ├── constants/      # 변하지 않는 값(기본 테마)
-└── types/          # TypeScript 타입 정의
+├── types/          # TypeScript 타입 정의
+├── App.tsx         # 라우터 설정
+└── RootRoute.tsx   # 최상위 라우트 (인증 가드, 레이아웃)
 ```
 
 ---
 
-## 트러블슈팅
-- [Firebase Authentication 팝업 로그인 시 Cross-Origin-Opener-Policy(COOP) 오류](https://velog.io/@melcoding/%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-COOP)
-- [Firebase Authentication 리다이렉트 로그인 시 로그인되지 않고 초기 화면으로 돌아가는 문제](https://velog.io/@melcoding/sign-in-redirect-problem)
-- [개발 모드, 배포 모드 분기처리](https://velog.io/@melcoding/import.meta.env.MODE)
-- [카카오톡 인앱 브라우저에서 구글 OAuth 로그인 차단 문제 해결](https://velog.io/@melcoding/kakaotalk-in-app-google-OAuth)
-- [Firestore 프로젝트 삭제 시 관련 데이터 정리 누락 해결](https://velog.io/@melcoding/firestore-delete-project)
-- [카카오톡 브라우저 감지 로직 위치로 인한 접근 차단 문제](https://velog.io/@melcoding/troubleshooting-kakao-browser-detect-location)
-- [이미지 모달 높이 고정으로 긴 이미지 사용성 개선](https://velog.io/@melcoding/troubleshooting-image-modal-size)
+## 트러블슈팅 & 리팩토링
+- [[CICD] PR을 올리면 AI가 코드 리뷰를 해주는 워크플로우 도입](https://velog.io/@melcoding/ci-cd-pr-ai-review)
+- [[리팩토링] React Context 패턴으로 인증 리팩토링](https://velog.io/@melcoding/refactoring-react-context-auth)
+- [[트러블슈팅] Firebase 멀티호스팅 리다이렉트 로그인 오류 완벽 해결](https://velog.io/@melcoding/troubleshooting-firebase-redirect-login)
+- [[트러블슈팅] 로그아웃 후 뒤로가기 방지 및 리다이렉트 무한 로딩 해결](https://velog.io/@melcoding/troubleshooting-route-guard-problem)
+- [[리팩토링] Advent Calendar 검색엔진 최적화(SEO)](https://velog.io/@melcoding/advent-calendar-seo)
+- [[리팩토링] Advent Calendar 번들 최적화로 모바일 메인 로딩 시간 단축](https://velog.io/@melcoding/refactoring-advent-calendar-bundle-size-optimization)
+- [[트러블슈팅] 이미지 모달 높이 고정으로 긴 이미지 사용성 개선](https://velog.io/@melcoding/troubleshooting-image-modal-size)
+- [[트러블슈팅] 카카오톡 브라우저 감지 로직 위치로 인한 접근 차단 문제](https://velog.io/@melcoding/troubleshooting-kakao-browser-detect-location)
+- [[트러블슈팅] Firestore 프로젝트 삭제 시 관련 데이터 정리 누락 해결](https://velog.io/@melcoding/firestore-delete-project)
+- [[트러블슈팅] 카카오톡 인앱 브라우저에서 구글 OAuth 로그인 차단 문제 해결](https://velog.io/@melcoding/kakaotalk-in-app-google-OAuth)
+- [[트러블슈팅] Firebase Authentication 리다이렉트 로그인 시 로그인되지 않고 초기 화면으로 돌아가는 문제 해결](https://velog.io/@melcoding/sign-in-redirect-problem)
+- [[트러블슈팅] Firebase Authentication 팝업 로그인 시 Cross-Origin-Opener-Policy(COOP) 오류](https://velog.io/@melcoding/troubleshooting-google-popup-COOP)
+- [[트러블슈팅] import.meta.env.MODE](https://velog.io/@melcoding/import.meta.env.MODE)
+- [[트러블슈팅] Firebase 함수와 타입을 분리하여 Import](https://velog.io/@melcoding/troubleshooting-typescript-function-type)
 ---
 
-## 리팩토링
-
-[Advent Calendar 번들 최적화로 모바일 메인 로딩 시간 단축](https://velog.io/@melcoding/refactoring-advent-calendar-bundle-size-optimization)
-
----
-
-## 추가 개발 예정 기능 사항
+## 추가 개발 완료
 - [x] 주제 직접 입력 기능
 - [x] 프로젝트 삭제 기능
 - [x] 이미지 하단에 이미지 올린 사용자명 추가
+- [x] 전체 진행 일자 사용자 설정 기능
+
+## 추가 개발 예정 기능 사항
 - [ ] 이미지 올리기 선택한 위치에 표시
-- [ ] 전체 진행 일자 사용자 설정 기능
 - [ ] 프로젝트 멤버 관리 기능
 - [ ] 내 정보 수정 기능
 ---
@@ -204,6 +216,9 @@ src/
 - **체계적인 형상 관리 및 버전 전략:** 1인 프로젝트임에도 **Git Conventional Commits** 규격과 기능 단위 브랜치 전략을 엄격히 준수하여, 추후 협업이나 확장이 용이한 **투명한 히스토리 관리** 체계 구축
 - **서버리스 기반 인프라 효율화:** Firebase를 활용한 서버리스 아키텍처를 설계하여, 인프라 관리 비용을 최소화하고 **프론트엔드 비즈니스 로직 최적화에 집중**할 수 있는 개발 환경 조성
 - **타입 안정성 확보를 통한 품질 관리:** TypeScript를 전면 도입하여 컴포넌트 간 데이터 흐름을 규격화하고, **런타임 에러를 사전에 차단하는 안정적인 코드 베이스** 확보
+- **CI/CD 파이프라인 자동화:** GitHub Actions로 Firebase 자동 배포 워크플로우를 구성하고 dev/prod 환경을 분리하여, PR마다 테스트 URL을 자동으로 댓글로 제공하는 **배포 자동화 체계** 구축
+- **AI 기반 코드 리뷰 자동화:** OpenAI API를 GitHub Actions에 통합하여 PR 생성 시 자동으로 코드 리뷰를 수행하는 워크플로우를 도입, **코드 품질 관리를 자동화**하는 개발 환경 구성
+- **성능 최적화 수치화:** 번들 최적화(코드 스플리팅, 불필요 의존성 제거)와 SEO 메타 태그 추가를 통해 **모바일 초기 로딩 성능 개선 및 검색 엔진 노출** 확보
 ---
 
 ## 배운 점
@@ -221,3 +236,13 @@ src/
 **3. UX 역량: 제약을 통한 사용자 가치 창출**
 
 - **목적 중심의 기능 제한:** "오늘/과거 날짜만 업로드 가능"과 같은 의도적인 기능 제한 프로세스를 통해, 서비스 본연의 가치(어드벤트 캘린더의 설렘)를 유지하는 **UX를 고민하는** 역량 강화
+
+**4. 인프라 역량: 환경 분리와 배포 자동화**
+
+- **dev/prod 환경 분리:** Firebase 멀티호스팅을 활용해 개발 환경과 운영 환경을 명확히 분리하고, PR마다 독립적인 테스트 URL을 제공함으로써 **안전한 변경 검증 프로세스** 체득
+- **CI/CD 자동화의 실질적 가치:** 배포 자동화가 단순한 편의를 넘어 **릴리즈 품질 안정성과 개발 집중도**를 높인다는 것을 직접 경험
+
+**5. AI 도구 활용: 개발 워크플로우 고도화**
+
+- **AI 코드 리뷰 도입:** OpenAI API와 GitHub Actions를 연동하여 PR 자동 코드 리뷰를 구현하는 과정에서, **외부 API 통합과 워크플로우 설계** 역량 습득
+- **도구로서의 AI 활용:** AI 리뷰를 통해 놓치기 쉬운 코드 품질 이슈를 사전에 발견하고, **인간 리뷰와 AI 리뷰의 역할 분담**에 대한 실용적 관점 형성
