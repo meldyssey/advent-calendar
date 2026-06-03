@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router";
 
 
 export const JoinProjectPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [project, setProject] = useState<ProjectData | null>(null);
@@ -19,11 +19,11 @@ export const JoinProjectPage = () => {
 
   useEffect(() => {
     const loadProject = async () => {
-      if (!id || !user) return;
+      if (!projectId || !user) return;
 
       try {
         setLoading(true);
-        const projectData = await getProject(id);
+        const projectData = await getProject(projectId);
 
         if (!projectData) {
           setError('프로젝트를 찾을 수 없습니다.');
@@ -45,17 +45,17 @@ export const JoinProjectPage = () => {
     };
 
     loadProject();
-  }, [id, user]);
+  }, [projectId, user]);
 
   const handleJoin = async () => {
-    if (!id || !user || !project) return;
+    if (!projectId || !user || !project) return;
 
     try {
       setJoining(true);
-      await addMember(id, user.uid);
+      await addMember(projectId, user.uid);
       
       // 성공 후 프로젝트 페이지로 이동
-      navigate(`/projects/${id}`);
+      navigate(`/projects/${projectId}`);
     } catch (error) {
       console.error('참여 실패:', error);
       if (error instanceof Error && error.message.includes('이미 프로젝트 멤버')) {
@@ -107,7 +107,7 @@ export const JoinProjectPage = () => {
           <p className="text-slate-600 mb-6">
             {project.title} 프로젝트의 멤버입니다.
           </p>
-          <Button onClick={() => navigate(`/projects/${id}`)}>
+          <Button onClick={() => navigate(`/projects/${projectId}`)}>
             프로젝트 보기
           </Button>
         </div>
