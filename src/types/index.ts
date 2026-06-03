@@ -93,3 +93,10 @@ export interface ImageData {
   storagePath: string;
   uploadedAt: Date;
 }
+
+export type UseMutationCallback = {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+  onMutate?: () => void;
+  onSettled?: () => void;
+};

@@ -1,9 +1,8 @@
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
-import { addMember } from "@/firebase/projects";
+import { useAddMember } from "@/hooks/mutations/useAddMember";
 import { useProjectData } from "@/hooks/queries/useProjectData";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
@@ -12,27 +11,25 @@ export const JoinProjectPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [joining, setJoining] = useState(false);
 
   const { data: project, error: projectDataError, isPending: isProjectDataPending } = useProjectData({projectId})
 
+  const { mutate: addMember, isPending: isAddMemberPending } = useAddMember({
+    onSuccess: () => {
+      navigate(`/projects/${projectId}`);
+    },
+    onError: () => {
+      toast.error("프로젝트 참여에 실패했습니다", {
+        position: "top-center",
+      });
+    },
+  });
+
   const alreadyMember = project?.members.includes(user?.uid ?? '') ?? false
 
-  const handleJoin = async () => {
+  const handleJoin = () => {
     if (!projectId || !user || !project) return;
-
-    try {
-      setJoining(true);
-      await addMember(projectId, user.uid);
-      
-      // 성공 후 프로젝트 페이지로 이동
-      navigate(`/projects/${projectId}`);
-    } catch (error) {
-      console.error('참여 실패:', error);
-      toast('프로젝트 참여에 실패했습니다.');
-    } finally {
-      setJoining(false);
-    }
+    addMember({ projectId, userId: user.uid })
   };
 
   if (isProjectDataPending) return <Loader />
@@ -98,7 +95,7 @@ export const JoinProjectPage = () => {
             </h3>
             <div className="space-y-2 text-sm text-slate-600">
               <p>
-                📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
+                📅 {project.startDate.toLocaleDateString('ko-KR')} - {project.endDate.toLocaleDateString('ko-KR')}
               </p>
               <p>
                 📆 총 {project.totalDays}일
@@ -112,6 +109,7 @@ export const JoinProjectPage = () => {
           {/* 버튼 */}
           <div className="flex gap-3">
             <Button
+              disabled= {isAddMemberPending}
               onClick={() => navigate('/projects')}
               variant="outline"
               className="flex-1"
@@ -120,10 +118,10 @@ export const JoinProjectPage = () => {
             </Button>
             <Button
               onClick={handleJoin}
-              disabled={joining}
+              disabled={isAddMemberPending}
               className="flex-1"
             >
-              {joining ? '참여 중...' : '참여하기'}
+              {isAddMemberPending ? '참여 중...' : '참여하기'}
             </Button>
           </div>
         </div>
