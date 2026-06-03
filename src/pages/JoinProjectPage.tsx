@@ -1,51 +1,22 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { addMember, getProject } from "@/firebase/projects";
+import { addMember } from "@/firebase/projects";
+import { useProjectData } from "@/hooks/queries/useProjectData";
 import { useAuth } from "@/hooks/useAuth";
-import type { ProjectData } from "@/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 
 export const JoinProjectPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [project, setProject] = useState<ProjectData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [alreadyMember, setAlreadyMember] = useState(false);
 
-  useEffect(() => {
-    const loadProject = async () => {
-      if (!projectId || !user) return;
+  const { data: project, error: projectDataError, isPending: isProjectDataPending } = useProjectData({projectId})
 
-      try {
-        setLoading(true);
-        const projectData = await getProject(projectId);
-
-        if (!projectData) {
-          setError('프로젝트를 찾을 수 없습니다.');
-          return;
-        }
-
-        setProject(projectData);
-
-        // 이미 멤버인지 확인
-        if (projectData.members.includes(user.uid)) {
-          setAlreadyMember(true);
-        }
-      } catch (err) {
-        console.error('프로젝트 로딩 실패:', err);
-        setError('프로젝트를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProject();
-  }, [projectId, user]);
+  const alreadyMember = project?.members.includes(user?.uid ?? '') ?? false
 
   const handleJoin = async () => {
     if (!projectId || !user || !project) return;
@@ -58,26 +29,15 @@ export const JoinProjectPage = () => {
       navigate(`/projects/${projectId}`);
     } catch (error) {
       console.error('참여 실패:', error);
-      if (error instanceof Error && error.message.includes('이미 프로젝트 멤버')) {
-        setAlreadyMember(true);
-      } else {
-        alert('프로젝트 참여에 실패했습니다.');
-      }
+      toast('프로젝트 참여에 실패했습니다.');
     } finally {
       setJoining(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <Spinner />
-        <p className="text-sm text-slate-600 mt-4">로딩 중...</p>
-      </div>     
-    );
-  }
+  if (isProjectDataPending) return <Loader />
 
-  if (error || !project) {
+  if (projectDataError || !project) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
@@ -86,7 +46,7 @@ export const JoinProjectPage = () => {
             프로젝트를 찾을 수 없습니다
           </h2>
           <p className="text-slate-600 mb-6">
-            {error || '유효하지 않은 초대 링크입니다.'}
+            { '유효하지 않은 초대 링크입니다.'}
           </p>
           <Button onClick={() => navigate('/projects')}>
             내 프로젝트로 돌아가기
