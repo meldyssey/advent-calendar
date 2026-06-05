@@ -94,8 +94,8 @@ export interface ImageData {
   uploadedAt: Date;
 }
 
-export type UseMutationCallback = {
-  onSuccess?: () => void;
+export type UseMutationCallback<TData = void> = {
+  onSuccess?: (data: TData) => void;
   onError?: (error: Error) => void;
   onMutate?: () => void;
   onSettled?: () => void;
