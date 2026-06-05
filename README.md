@@ -71,6 +71,7 @@
 - React Router DOM v7
 - Tailwind CSS v3.4.18
 - shadcn/ui
+- TanStack Query v5 (서버 상태 관리)
 
 ### Backend & Infrastructure
 
@@ -172,7 +173,9 @@ src/
 ├── provider/       # Context Provider (AuthProvider)
 ├── firebase/       # Firebase 로직 분리
 ├── hooks/          # Custom Hooks
-├── lib/            # 유틸리티 (utils, browserDetect)
+│   ├── queries/    # TanStack Query 쿼리 훅
+│   └── mutations/  # TanStack Query 뮤테이션 훅
+├── lib/            # 유틸리티 (utils, browserDetect, constants)
 ├── constants/      # 변하지 않는 값(기본 테마)
 ├── types/          # TypeScript 타입 정의
 ├── App.tsx         # 라우터 설정
@@ -203,6 +206,7 @@ src/
 - [x] 프로젝트 삭제 기능
 - [x] 이미지 하단에 이미지 올린 사용자명 추가
 - [x] 전체 진행 일자 사용자 설정 기능
+- [x] TanStack Query 도입으로 데이터 페칭 리팩토링 (선언적 서버 상태 관리, 캐시 기반 중복 요청 방지)
 
 ## 추가 개발 예정 기능 사항
 - [ ] 이미지 올리기 선택한 위치에 표시
