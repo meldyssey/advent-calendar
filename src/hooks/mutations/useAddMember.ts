@@ -7,13 +7,7 @@ export function useAddMember(callbacks?: UseMutationCallback) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      projectId,
-      userId,
-    }: {
-      projectId: string;
-      userId: string;
-    }) => addMember({ projectId, userId }),
+    mutationFn: addMember,
     onSuccess: async (_data, { projectId, userId }) => {
       await Promise.all([
         queryClient.invalidateQueries({
