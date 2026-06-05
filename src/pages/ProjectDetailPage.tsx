@@ -3,8 +3,7 @@ import { CalendarGrid } from '@/components/project/CalendarGrid';
 import { InviteModal } from '@/components/project/InviteModal';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { deleteProjectImages } from '@/firebase/image';
-import { deleteProject } from '@/firebase/projects';
+import { useDeleteProject } from '@/hooks/mutations/useDeleteProject';
 import { useDaysData } from '@/hooks/queries/useDaysData';
 import { useProjectData } from '@/hooks/queries/useProjectData';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,6 +19,19 @@ export const ProjectDetailPage = () => {
 
   const { data: project, error: projectDataError, isPending: isProjectDataPending } = useProjectData({projectId})
   const { data: days, error: daysDataError, isPending: isDaysDataPending } = useDaysData({projectId})
+
+  const { mutate: deleteProject, isPending: isDeleteProjectPending } = useDeleteProject(
+    { userId: user!.uid },
+    { 
+      onSuccess: () => {
+        toast('프로젝트가 삭제되었습니다.');
+        navigate('/projects')
+      },
+      onError: () => {
+        toast('프로젝트 삭제에 실패했습니다.')
+      }
+    }
+  )
 
   if (isProjectDataPending || isDaysDataPending) return <Loader/>
 
@@ -47,17 +59,8 @@ export const ProjectDetailPage = () => {
   endDate.setHours(0, 0, 0, 0);
   const dDay = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-  const handleDeleteProject = async(projectId:string) => {
-
-    try {
-      await deleteProjectImages(projectId)
-      await deleteProject(projectId)
-      toast('프로젝트가 삭제되었습니다.')
-      navigate(`/projects`)
-    } catch (error) {
-      console.error('프로젝트 삭제 실패: ', error);
-      toast('프로젝트 삭제에 실패했습니다.')
-    }
+  const handleDeleteProject = (projectId:string) => {
+    deleteProject(projectId)
   }
 
   return (
@@ -95,6 +98,7 @@ export const ProjectDetailPage = () => {
                     <Button
                       onClick={() => setIsInviteModalOpen(true)}
                       className='flex-1'
+                      disabled={isDeleteProjectPending}
                     >
                       👥 친구 초대
                     </Button>
@@ -103,8 +107,9 @@ export const ProjectDetailPage = () => {
                         <Button
                           className="flex-1"
                           variant="secondary"
+                          disabled={isDeleteProjectPending}
                         >
-                          프로젝트 삭제
+                          {isDeleteProjectPending ? '삭제 중...' : '프로젝트 삭제'}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
