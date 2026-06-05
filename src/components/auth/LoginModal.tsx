@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { signInWithGoogle } from "@/firebase/auth"; // 수정된 signInWithGoogle import
 import { Spinner } from "../ui/spinner";
+import { toast } from "sonner";
 
 interface LoginModalProps {
   open: boolean;
@@ -34,7 +35,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
       onOpenChange(false); // 로그인 성공 시 모달 닫기
     } catch (error) {
       console.error('리다이렉트 로그인 시작 실패:', error); // 에러 메시지 변경
-      alert('로그인 시도 중 오류가 발생했습니다.'); // 사용자에게 표시되는 메시지 변경
+      toast('로그인 시도 중 오류가 발생했습니다.'); // 사용자에게 표시되는 메시지 변경
     } finally {
       setLoading(false);
     }

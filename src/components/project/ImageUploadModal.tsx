@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { uploadImage } from '@/firebase/image';
 import { getUser } from '@/firebase/user';
 import { UploadCloud } from 'lucide-react';
+import { useUploadImage } from '@/hooks/mutations/useUploadImage';
+import { toast } from 'sonner';
 
 interface ImageUploadModalProps {
   projectId: string;
@@ -11,7 +12,6 @@ interface ImageUploadModalProps {
   dayTheme: string;
   totalDays: number;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
 export const ImageUploadModal = ({
@@ -20,15 +20,29 @@ export const ImageUploadModal = ({
   dayTheme,
   totalDays,
   onClose,
-  onSuccess,
 }: ImageUploadModalProps) => {
   const { user } = useAuth();
   const [userName, setUserName] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+
+  const { mutate: uploadImage, isPending: isUploadImagePending } = useUploadImage(
+    { projectId, dayNumber },
+    {
+      onSuccess: () => {
+        clearInterval(intervalRef.current);
+        setUploadProgress(100);
+        setTimeout(() => { onClose(); }, 500);
+      },
+      onError: () => {
+        clearInterval(intervalRef.current);
+        toast('업로드에 실패했습니다.');
+      },
+    }
+  );
   useEffect(() => {
     const loadUserName = async () => {
       if(!user) return;
@@ -47,13 +61,13 @@ export const ImageUploadModal = ({
 
     // 이미지 파일만 허용
     if (!selectedFile.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다.');
+      toast('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
     // 파일 크기 제한 (10MB)
     if (selectedFile.size > 10 * 1024 * 1024) {
-      alert('파일 크기는 10MB 이하여야 합니다.');
+      toast('파일 크기는 10MB 이하여야 합니다.');
       return;
     }
 
@@ -68,46 +82,13 @@ export const ImageUploadModal = ({
   };
 
   // 업로드
-  const handleUpload = async () => {
+  const handleUpload = () => {
     if (!file || !user) return;
-
-    try {
-      setUploading(true);
-      setUploadProgress(0);
-
-      // 진행률 시뮬레이션 (실제로는 Storage의 progress 이벤트 사용)
-      const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(interval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      await uploadImage(
-        projectId,
-        dayNumber,
-        file,
-        user.uid,
-        userName
-      );
-
-      clearInterval(interval);
-      setUploadProgress(100);
-
-      // 성공 후 처리
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 500);
-    } catch (error) {
-      console.error('업로드 실패:', error);
-      alert('업로드에 실패했습니다. 다시 시도해주세요.');
-    } finally {
-      setUploading(false);
-    }
+    setUploadProgress(0);
+    intervalRef.current = setInterval(() => {
+      setUploadProgress(prev => prev >= 90 ? (clearInterval(intervalRef.current), 90) : prev + 10);
+    }, 200);
+    uploadImage({ file, userId: user.uid, userName });
   };
 
   return (
@@ -161,7 +142,7 @@ export const ImageUploadModal = ({
             </div>
 
             {/* 업로드 진행률 */}
-            {uploading && (
+            {isUploadImagePending && (
               <div className="mt-4">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
@@ -183,16 +164,16 @@ export const ImageUploadModal = ({
             onClick={onClose}
             variant="outline"
             className="flex-1"
-            disabled={uploading}
+            disabled={isUploadImagePending}
           >
             취소
           </Button>
           <Button
             onClick={handleUpload}
             className="flex-1"
-            disabled={!file || uploading}
+            disabled={!file || isUploadImagePending}
           >
-            {uploading ? '업로드 중...' : '업로드'}
+            {isUploadImagePending ? '업로드 중...' : '업로드'}
           </Button>
         </div>
       </div>

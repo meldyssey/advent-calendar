@@ -1,79 +1,46 @@
+import Loader from '@/components/Loader';
 import { CalendarGrid } from '@/components/project/CalendarGrid';
 import { InviteModal } from '@/components/project/InviteModal';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { getDays } from '@/firebase/days';
-import { deleteProjectImages } from '@/firebase/image';
-import { deleteProject, getProject } from '@/firebase/projects';
+import { useDeleteProject } from '@/hooks/mutations/useDeleteProject';
+import { useDaysData } from '@/hooks/queries/useDaysData';
+import { useProjectData } from '@/hooks/queries/useProjectData';
 import { useAuth } from '@/hooks/useAuth';
-import type { DayData, ProjectData } from '@/types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 
 export const ProjectDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [project, setProject] = useState<ProjectData>()
-  const [days, setDays] = useState<DayData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
-  useEffect(() => {
-    const loadProject = async () => {
-      if (!id) {
-        setLoading(false);
-        return;
+  const { data: project, error: projectDataError, isPending: isProjectDataPending } = useProjectData({projectId})
+  const { data: days, error: daysDataError, isPending: isDaysDataPending } = useDaysData({projectId})
+
+  const { mutate: deleteProject, isPending: isDeleteProjectPending } = useDeleteProject(
+    { userId: user!.uid },
+    { 
+      onSuccess: () => {
+        toast('프로젝트가 삭제되었습니다.');
+        navigate('/projects')
+      },
+      onError: () => {
+        toast('프로젝트 삭제에 실패했습니다.')
       }
-      
-      try {
-        setLoading(true);
-        
-        const [projectData, daysData] = await Promise.all([
-          getProject(id),
-          getDays(id),
-        ])
-        
-        if (!projectData) {
-          setError('프로젝트를 찾을 수 없습니다.');
-          return;
-        }
+    }
+  )
 
-        if (!daysData) {
-          setError('프로젝트 주제를 찾을 수 없습니다.');
-          return;
-        }
+  if (isProjectDataPending || isDaysDataPending) return <Loader/>
 
-        setProject(projectData)
-        setDays(daysData)
-      } catch (error) {
-        console.error('프로젝트 로딩 실패', error)
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProject();
-  }, [id])
-  
-  if (loading) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <Spinner />
-        <p className="text-sm text-slate-600 mt-4">프로젝트를 불러오는 중...</p>
-      </div>      
-    )
-  }
-
-  // 에러
-  if (error || !project || !days) {
-    return (
+  if (projectDataError || daysDataError || !project || !days) {
+        return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-xl font-semibold text-red-600 mb-4">
-            {error || '프로젝트를 찾을 수 없습니다.'}
+            {'프로젝트를 찾을 수 없습니다.'}
           </div>
           <Button onClick={() => navigate('/projects')}>
             목록으로 돌아가기
@@ -81,9 +48,9 @@ export const ProjectDetailPage = () => {
         </div>
       </div>
     );
-  }
+  };
 
-  const isCreator = user?.uid === project?.createdBy
+  const isCreator = user?.uid === project.createdBy
 
   // D-Day 계산
   const today = new Date();
@@ -92,17 +59,8 @@ export const ProjectDetailPage = () => {
   endDate.setHours(0, 0, 0, 0);
   const dDay = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-  const hadleDeleteProject = async(projectId:string) => {
-
-    try {
-      await deleteProjectImages(projectId)
-      await deleteProject(projectId)
-      toast('프로젝트가 삭제되었습니다.')
-      navigate(`/projects`)
-    } catch (error) {
-      console.error('프로젝트 삭제 실패: ', error);
-      toast('프로젝트 삭제에 실패했습니다.')
-    }
+  const handleDeleteProject = (projectId:string) => {
+    deleteProject(projectId)
   }
 
   return (
@@ -140,6 +98,7 @@ export const ProjectDetailPage = () => {
                     <Button
                       onClick={() => setIsInviteModalOpen(true)}
                       className='flex-1'
+                      disabled={isDeleteProjectPending}
                     >
                       👥 친구 초대
                     </Button>
@@ -148,8 +107,9 @@ export const ProjectDetailPage = () => {
                         <Button
                           className="flex-1"
                           variant="secondary"
+                          disabled={isDeleteProjectPending}
                         >
-                          프로젝트 삭제
+                          {isDeleteProjectPending ? '삭제 중...' : '프로젝트 삭제'}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -162,7 +122,7 @@ export const ProjectDetailPage = () => {
                         <AlertDialogFooter>
                           <AlertDialogCancel>취소</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => id && hadleDeleteProject(id)}
+                            onClick={() => projectId && handleDeleteProject(projectId)}
                           >
                             삭제
                           </AlertDialogAction>
@@ -179,7 +139,7 @@ export const ProjectDetailPage = () => {
           {/* 캘린더 그리드 */}
           <CalendarGrid
             days={days}
-            projectId={id!}
+            projectId={projectId!}
             totalDays={project.totalDays}
             memberCount={project.members.length}
           />
@@ -187,7 +147,7 @@ export const ProjectDetailPage = () => {
         {/* 초대 모달 - 추가 */}
         {isInviteModalOpen && (
           <InviteModal
-            projectId={id!}
+            projectId={projectId!}
             onClose={() => setIsInviteModalOpen(false)}
           />
         )}

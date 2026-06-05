@@ -1,83 +1,40 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { addMember, getProject } from "@/firebase/projects";
+import { useAddMember } from "@/hooks/mutations/useAddMember";
+import { useProjectData } from "@/hooks/queries/useProjectData";
 import { useAuth } from "@/hooks/useAuth";
-import type { ProjectData } from "@/types";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 
 export const JoinProjectPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [project, setProject] = useState<ProjectData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [joining, setJoining] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [alreadyMember, setAlreadyMember] = useState(false);
 
-  useEffect(() => {
-    const loadProject = async () => {
-      if (!id || !user) return;
+  const { data: project, error: projectDataError, isPending: isProjectDataPending } = useProjectData({projectId})
 
-      try {
-        setLoading(true);
-        const projectData = await getProject(id);
+  const { mutate: addMember, isPending: isAddMemberPending } = useAddMember({
+    onSuccess: () => {
+      navigate(`/projects/${projectId}`);
+    },
+    onError: () => {
+      toast.error("프로젝트 참여에 실패했습니다", {
+        position: "top-center",
+      });
+    },
+  });
 
-        if (!projectData) {
-          setError('프로젝트를 찾을 수 없습니다.');
-          return;
-        }
+  const alreadyMember = project?.members.includes(user?.uid ?? '') ?? false
 
-        setProject(projectData);
-
-        // 이미 멤버인지 확인
-        if (projectData.members.includes(user.uid)) {
-          setAlreadyMember(true);
-        }
-      } catch (err) {
-        console.error('프로젝트 로딩 실패:', err);
-        setError('프로젝트를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProject();
-  }, [id, user]);
-
-  const handleJoin = async () => {
-    if (!id || !user || !project) return;
-
-    try {
-      setJoining(true);
-      await addMember(id, user.uid);
-      
-      // 성공 후 프로젝트 페이지로 이동
-      navigate(`/projects/${id}`);
-    } catch (error) {
-      console.error('참여 실패:', error);
-      if (error instanceof Error && error.message.includes('이미 프로젝트 멤버')) {
-        setAlreadyMember(true);
-      } else {
-        alert('프로젝트 참여에 실패했습니다.');
-      }
-    } finally {
-      setJoining(false);
-    }
+  const handleJoin = () => {
+    if (!projectId || !user || !project) return;
+    addMember({ projectId, userId: user.uid })
   };
 
-  if (loading) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <Spinner />
-        <p className="text-sm text-slate-600 mt-4">로딩 중...</p>
-      </div>     
-    );
-  }
+  if (isProjectDataPending) return <Loader />
 
-  if (error || !project) {
+  if (projectDataError || !project) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
@@ -86,7 +43,7 @@ export const JoinProjectPage = () => {
             프로젝트를 찾을 수 없습니다
           </h2>
           <p className="text-slate-600 mb-6">
-            {error || '유효하지 않은 초대 링크입니다.'}
+            { '유효하지 않은 초대 링크입니다.'}
           </p>
           <Button onClick={() => navigate('/projects')}>
             내 프로젝트로 돌아가기
@@ -107,7 +64,7 @@ export const JoinProjectPage = () => {
           <p className="text-slate-600 mb-6">
             {project.title} 프로젝트의 멤버입니다.
           </p>
-          <Button onClick={() => navigate(`/projects/${id}`)}>
+          <Button onClick={() => navigate(`/projects/${projectId}`)}>
             프로젝트 보기
           </Button>
         </div>
@@ -138,7 +95,7 @@ export const JoinProjectPage = () => {
             </h3>
             <div className="space-y-2 text-sm text-slate-600">
               <p>
-                📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
+                📅 {project.startDate.toLocaleDateString('ko-KR')} - {project.endDate.toLocaleDateString('ko-KR')}
               </p>
               <p>
                 📆 총 {project.totalDays}일
@@ -152,6 +109,7 @@ export const JoinProjectPage = () => {
           {/* 버튼 */}
           <div className="flex gap-3">
             <Button
+              disabled= {isAddMemberPending}
               onClick={() => navigate('/projects')}
               variant="outline"
               className="flex-1"
@@ -160,10 +118,10 @@ export const JoinProjectPage = () => {
             </Button>
             <Button
               onClick={handleJoin}
-              disabled={joining}
+              disabled={isAddMemberPending}
               className="flex-1"
             >
-              {joining ? '참여 중...' : '참여하기'}
+              {isAddMemberPending ? '참여 중...' : '참여하기'}
             </Button>
           </div>
         </div>

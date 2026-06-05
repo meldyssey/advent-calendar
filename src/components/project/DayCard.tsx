@@ -1,9 +1,9 @@
-import { getDayImages } from '@/firebase/image';
-import type { ImageData, DayData } from '@/types';
-import { useEffect, useState } from 'react';
+import type { DayData } from '@/types';
+import { useState } from 'react';
 import { ImageUploadModal } from './ImageUploadModal';
 import { ImageDetailModal } from './ImageDetailModal';
 import { UploadCloud } from 'lucide-react';
+import { useImagesData } from '@/hooks/queries/useImagesData';
 
 interface DayCardProps {
   day: DayData;
@@ -13,10 +13,10 @@ interface DayCardProps {
 }
 
 export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps) => {
-  const [images, setImages] = useState<ImageData[]>([])
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
-  const [loading, setLoading] = useState(true);
+
+  const { data: images = [], isPending: isImageDataPending } = useImagesData({projectId, dayNumber: day.dayNumber})
 
   // 날짜 상태 계산
   const today = new Date();
@@ -29,32 +29,6 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
   const isFuture = dayDate > today;
   const canUpload = isToday || isPast;
 
-  useEffect(()=>{
-    const loadImages = async () => {
-      try {
-        setLoading(true);
-        const data = await getDayImages(projectId, day.dayNumber);
-        setImages(data)
-      } catch (error) {
-        console.error('이미지 로딩 실패',  error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadImages();
-  }, [projectId, day.dayNumber])
-
-  // 업로드 성공 시 이미지 새로고침
-  const handleUploadSuccess = async () => {
-    const data = await getDayImages(projectId, day.dayNumber);
-    setImages(data);
-  };
-
-  // 삭제 성공 시 이미지 새로고침
-  const handleDeleteSuccess = async () => {
-    const data = await getDayImages(projectId, day.dayNumber);
-    setImages(data);
-  };
 
   // 카드 스타일
   const getCardStyle = () => {
@@ -99,7 +73,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
 
         {/* 이미지 영역 - 멤버 수만큼 그리드 표시 */}
         <div className="my-3">
-          {loading ? (
+          {isImageDataPending ? (
             <div className="h-32 rounded flex items-center justify-center">
               <div className="text-sm text-slate-400">로딩 중...</div>
             </div>
@@ -181,7 +155,6 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
           dayTheme={day.theme}
           totalDays={totalDays}
           onClose={() => setIsUploadModalOpen(false)}
-          onSuccess={handleUploadSuccess}
         />
       )}
       {/* 상세 모달 - 추가 */}
@@ -194,7 +167,6 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
           projectId={projectId}
           totalDays={totalDays}
           onClose={() => setIsDetailModalOpen(false)}
-          onDelete={handleDeleteSuccess}
         />
       )}
     </>

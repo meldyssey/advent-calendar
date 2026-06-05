@@ -138,8 +138,14 @@ export const deleteProject = async (projectId: string): Promise<void> => {
 
 // 멤버 추가
 export const addMember = async (
-  projectId: string,
-  userId: string,
+  { 
+    projectId, 
+    userId 
+  } : 
+  { 
+    projectId: string;
+    userId: string;
+  }
 ): Promise<void> => {
   try {
     const projectRef = doc(db, 'projects', projectId)

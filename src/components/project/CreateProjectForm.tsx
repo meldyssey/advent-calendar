@@ -1,22 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { useRef, useState } from 'react'
 import { Label } from '@/components/ui/label';
 import { DEFAULT_THEMES } from '@/constants/themes';
 import { useAuth } from '@/hooks/useAuth';
-import { Spinner } from '../ui/spinner';
-import { createProject } from '@/firebase/projects';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../ui/select';
 import { toast } from 'sonner';
+import { useCreateProject } from '@/hooks/mutations/useCreateProject';
+import { useNavigate } from 'react-router';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
-interface CreateProjectFormProps {
-  onSuccess?: (projectId: string) => void;
-  onCancel?: () => void
-}
 
-export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProps) => {
+export const CreateProjectForm = () => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false)
 
   const titleRef = useRef<HTMLInputElement>(null)
   const dateRef = useRef<HTMLInputElement>(null)
@@ -25,59 +21,73 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
   const [title, setTitle] = useState('');
   const [dateType, setDateType] = useState<'start' | 'end'>('start');
   const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 24);
+    return date.toISOString().split("T")[0];
+  });
   const [dateError, setDateError] = useState(false)
   const [themeType, setThemeType] = useState('default')
   const [themes, setThemes] = useState<string[]>([...DEFAULT_THEMES])
   const [totalDays, setTotalDays] = useState<number>(25)
 
-  // const totalDays = 25
-  // const themes = DEFAULT_THEMES
+  const navigate = useNavigate()
 
-  const calculateDate = useCallback((date: string, type: 'start' | 'end') => {
-    const selectedDate = new Date(date)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    if(type === 'start') {
-      const calculatedEnd = new Date(selectedDate)
-      calculatedEnd.setDate(selectedDate.getDate() + (totalDays - 1))
-      // console.log(calculatedEnd.toISOString().split("T")[0])
-      setEndDate(calculatedEnd.toISOString().split("T")[0])
+  const { mutate: createProject, isPending: isCreateProjectPending } = useCreateProject({
+    onSuccess: (projectId) => {
+      toast('프로젝트 생성이 완료되었습니다.')
+      navigate(`/projects/${projectId}`);
+    },
+    onError: () => {
+      toast.error("프로젝트 생성에 실패했습니다", {
+        position: "top-center",
+      });
+    },
+  });
+
+  const calculateDate = (date: string, type: 'start' | 'end', days = totalDays) => {
+    const selectedDate = new Date(date);
+    if (type === 'start') {
+      const calculatedEnd = new Date(selectedDate);
+      calculatedEnd.setDate(selectedDate.getDate() + (days - 1));
+      setEndDate(calculatedEnd.toISOString().split("T")[0]);
     } else {
-      const calculatedStart = new Date(selectedDate)
-      calculatedStart.setDate(selectedDate.getDate() - (totalDays - 1))
-      // if(calculatedStart < today){
-      //   setDateError(true);
-      //   alert('시작일이 오늘보다 이전일 수 없습니다. 날짜를 다시 선택해주세요.');
-      //   setStartDate('');  // 초기화
-      //   setEndDate('');    // 종료일도 초기화
-      //   return;
-      // } 
-    setStartDate(calculatedStart.toISOString().split("T")[0])
-    setDateError(false)
+      const calculatedStart = new Date(selectedDate);
+      calculatedStart.setDate(selectedDate.getDate() - (days - 1));
+      setStartDate(calculatedStart.toISOString().split("T")[0]);
+      setDateError(false);
     }
-  }, [totalDays])
-  
-  useEffect(() => {
-    // totalDays가 변경되면 themeType을 조건부로 설정
-    if (totalDays === 25) {
+  };
+
+  const handleTotalDaysChange = (value: string) => {
+    const days = Number(value)
+    setTotalDays(days);
+
+    if (dateType === 'start' && startDate) calculateDate(startDate, 'start', days);
+    else if (dateType === 'end' && endDate) calculateDate(endDate, 'end', days)
+
+    if (days === 25){
       setThemeType('default')
-      setThemes([...DEFAULT_THEMES])
+      setThemes([...DEFAULT_THEMES]);
     } else {
       setThemeType('custom')
-      setThemes(Array(totalDays).fill(''))
+      setThemes(Array(days).fill(''))
     }
-  }, [totalDays])
+  }
 
+  const handleDateTypeChange = (type: 'start' | 'end') => {
+    setDateType(type);
+    if (type === 'start' && startDate) {
+      calculateDate(startDate, 'start');
+    } else if (type === 'end') {
+      if (endDate) {
+        calculateDate(endDate, 'end');
+      } else if (startDate) {
+        calculateDate(startDate, 'start')
+      }
+    } 
+  }
 
-  useEffect(() => {
-    // 날짜가 이미 입력되어 있다면 재계산
-    if (dateType === 'start' && startDate) {
-      calculateDate(startDate, 'start')
-    } else if (dateType === 'end' && endDate) {
-      calculateDate(endDate, 'end')
-    }
-  }, [dateType, startDate, endDate, calculateDate])
 
   const todayToString = () => {
     const today = new Date()
@@ -108,7 +118,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if(!user) return;
 
@@ -136,26 +146,14 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
         }
     }
 
-    setLoading(true);
-
-    try {
-      const projectId = await createProject({
-        title,
-        userId: user.uid,
-        startDate: new Date(startDate), 
-        endDate:new Date(endDate), 
-        totalDays, 
-        customThemes: themes
-      });
-
-      toast('프로젝트 생성 성공')
-      onSuccess?.(projectId);
-    } catch(error){
-      console.error('프로젝트 생성 실패: ', error);
-      toast('프로젝트 생성 실패')
-    } finally {
-      setLoading(false)
-    }
+    createProject({
+      title,
+      userId: user.uid,
+      startDate: new Date(startDate), 
+      endDate:new Date(endDate), 
+      totalDays, 
+      customThemes: themes
+    });
   }
 
   return (
@@ -192,7 +190,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
             </Label>
             <Select
               value={totalDays.toString()}
-              onValueChange={(value)=>{setTotalDays(Number(value))}}
+              onValueChange={handleTotalDaysChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="프로젝트 기간(총 일수)을 선택해주세요." />
@@ -214,7 +212,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               <Button
                 type="button"
                 variant={dateType === 'start' ? 'default' : "outline" }
-                onClick={() => setDateType('start')}
+                onClick={() => handleDateTypeChange('start')}
                 className='flex-1 h-12'
               >
                 시작일 설정 (D-{totalDays-1})
@@ -222,7 +220,7 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
               <Button
                 type="button"
                 variant={dateType === 'end' ? 'default' : 'outline'}
-                onClick={() => setDateType('end')}
+                onClick={() => handleDateTypeChange('end')}
                 className='flex-1 h-12'
               >
                 종료일 설정 (D-Day)
@@ -355,23 +353,12 @@ export const CreateProjectForm = ({ onSuccess, onCancel }: CreateProjectFormProp
 
           {/* 버튼 영역 */}
           <div className="flex gap-4 pt-4">
-            {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-                disabled={loading}
-                className="flex-1 h-14 text-lg"
-              >
-                취소
-              </Button>
-            )}
             <Button
               type="submit"
-              disabled={loading || dateError}
+              disabled={isCreateProjectPending || dateError}
               className="flex-1 h-14 text-lg"
             >
-              {loading ? (<><Spinner/> 생성 중... </>) : '프로젝트 만들기'}
+              {isCreateProjectPending ? (<><Spinner/> 생성 중... </>) : '프로젝트 만들기'}
             </Button>
           </div>
         </form>

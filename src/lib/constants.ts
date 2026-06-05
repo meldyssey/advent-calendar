@@ -1,0 +1,19 @@
+export const QUERY_KEYS = {
+  project: {
+    all: ["project"],
+    list: (userId: string) => ["project", "list", userId],
+    byId: (projectId: string) => ["project", "byId", projectId],
+  },
+  days: {
+    all: ["days"],
+    byId: (projectId: string) => ["days", "byId", projectId],
+  },
+  images: {
+    all: ["images"],
+    byDay: (projectId: string, dayNumber: number) => [
+      "images",
+      projectId,
+      dayNumber,
+    ],
+  },
+};

@@ -69,9 +69,9 @@ export default function RootRoute() {
         <Route element={<GlobalLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects" element={<ProjectListPage />} />
-          <Route path="/projects/:id" element={<ProjectDetailPage />} />
+          <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
           <Route path="/projects/new" element={<CreateProjectPage />} />
-          <Route path="/join/:id" element={<JoinProjectPage />} />
+          <Route path="/join/:projectId" element={<JoinProjectPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
