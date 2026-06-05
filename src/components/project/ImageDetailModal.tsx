@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { deleteImage } from '@/firebase/image';
 import type { ImageData } from '@/types';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { toast } from 'sonner';
+import { useDeleteImage } from '@/hooks/mutations/useDeleteImage';
 
 interface ImageDetailModalProps {
   images: ImageData[];
@@ -13,7 +14,6 @@ interface ImageDetailModalProps {
   projectId: string;
   totalDays: number;
   onClose: () => void;
-  onDelete?: () => void;
 }
 
 export const ImageDetailModal = ({
@@ -24,14 +24,21 @@ export const ImageDetailModal = ({
   projectId,
   totalDays,
   onClose,
-  onDelete,
 }: ImageDetailModalProps) => {
   const { user } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [deleting, setDeleting] = useState(false);
 
   const currentImage = images[currentIndex];
   const isOwner = user?.uid === currentImage.userId;
+
+  const { mutate: deleteImage, isPending: isDeleteImagePending } = useDeleteImage({ projectId, dayNumber }, {
+      onSuccess: () => {
+        onClose();
+      },
+      onError: () => {
+        toast('이미지 삭제에 실패했습니다.');
+      },
+  })
 
   // 이전 이미지
   const handlePrevious = () => {
@@ -46,7 +53,7 @@ export const ImageDetailModal = ({
   // 이미지 삭제
   const handleDelete = async () => {
     if (!isOwner) {
-      alert('자신이 올린 이미지만 삭제할 수 있습니다.');
+      toast('자신이 올린 이미지만 삭제할 수 있습니다.');
       return;
     }
 
@@ -54,22 +61,7 @@ export const ImageDetailModal = ({
       return;
     }
 
-    try {
-      setDeleting(true);
-      
-      await deleteImage(projectId, currentImage.id, currentImage.storagePath);
-
-      // 삭제 후 처리
-      if (onDelete) {
-        onDelete();
-      }
-      onClose();
-    } catch (error) {
-      console.error('이미지 삭제 실패:', error);
-      alert('이미지 삭제에 실패했습니다.');
-    } finally {
-      setDeleting(false);
-    }
+    deleteImage({ imageId: currentImage.id, storagePath: currentImage.storagePath})
   };
 
   return (
@@ -154,12 +146,12 @@ export const ImageDetailModal = ({
               {isOwner && (
                 <Button
                   onClick={handleDelete}
-                  disabled={deleting}
+                  disabled={isDeleteImagePending}
                   variant="destructive"
                   size="sm"
                   className="flex-shrink-0"
                 >
-                  {deleting ? '삭제 중...' : '🗑️ 삭제'}
+                  {isDeleteImagePending ? '삭제 중...' : '🗑️ 삭제'}
                 </Button>
               )}
             </div>

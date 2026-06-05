@@ -11,6 +11,7 @@ import { signInWithGoogle } from "@/firebase/auth";
 import { Spinner } from "../ui/spinner";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface LoginFormProps {
   returnUrl?: string;
@@ -42,7 +43,7 @@ export const LoginForm = ({returnUrl}: LoginFormProps) => {
       await signInWithGoogle();
     } catch (error){
       console.error('로그인 실패:', error);
-      alert('로그인에 실패했습니다.');
+      toast('로그인에 실패했습니다.');
     } finally {
       setLoading(false);
     }

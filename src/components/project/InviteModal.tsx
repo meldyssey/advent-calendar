@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface InviteModalProps {
   projectId: string;
@@ -19,7 +20,7 @@ export const InviteModal = ({ projectId, onClose }: InviteModalProps) => {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('복사 실패:', err);
-      alert('링크 복사에 실패했습니다.');
+      toast('링크 복사에 실패했습니다.');
     }
   };
 
