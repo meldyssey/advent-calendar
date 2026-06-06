@@ -152,7 +152,7 @@ export const CreateProjectForm = () => {
       startDate: new Date(startDate), 
       endDate:new Date(endDate), 
       totalDays, 
-      customThemes: themes
+      customThemes: themeType === 'custom' ? themes : undefined
     });
   }
 
