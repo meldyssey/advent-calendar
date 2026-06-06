@@ -33,7 +33,7 @@ export const CreateProjectForm = () => {
 
   const navigate = useNavigate()
 
-  const { mutate: createProject, isPending: isCreateProjectPending } = useCreateProject({
+  const { mutate: createProject, isPending: isCreateProjectPending } = useCreateProject({ userId: user!.uid },{
     onSuccess: (projectId) => {
       toast('프로젝트 생성이 완료되었습니다.')
       navigate(`/projects/${projectId}`);

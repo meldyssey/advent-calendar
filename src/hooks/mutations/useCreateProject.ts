@@ -1,12 +1,19 @@
 import { createProject } from "@/firebase/projects";
+import { QUERY_KEYS } from "@/lib/constants";
 import type { UseMutationCallback } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-
-export function useCreateProject(callbacks?: UseMutationCallback<string>) {
+export function useCreateProject(
+  { userId }: { userId: string },
+  callbacks?: UseMutationCallback<string>,
+) {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProject,
     onSuccess: (projectId) => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.project.list(userId),
+      });
       if (callbacks?.onSuccess) callbacks.onSuccess(projectId);
     },
     onError: (error) => {
