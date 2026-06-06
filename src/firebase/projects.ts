@@ -22,7 +22,7 @@ const convertProject = (id: string, data: any): ProjectData => {
     startDate: timestampToDate(data.startDate),
     endDate: timestampToDate(data.endDate),
     totalDays: data.totalDays,
-    isCustomTheme: data.isCustomTheme,
+    isCustomTheme: data.isCustomTheme ?? false,
     createdAt: timestampToDate(data.createdAt),
   };
 };
@@ -40,6 +40,7 @@ export const createProject = async (params: CreateProjectParams): Promise<string
       startDate: Timestamp.fromDate(startDate),
       endDate: Timestamp.fromDate(endDate),
       totalDays: totalDays,
+      isCustomTheme: !!customThemes,
       createdAt: serverTimestamp(),
     });
 
