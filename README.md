@@ -24,6 +24,16 @@
 ---
 ## ✨ 주요 기능
 
+### 스크린샷
+
+| 홈 | 프로젝트 목록 |
+|:---:|:---:|
+| ![홈](docs/lighthouse/images/advent-calendar-home.png) | ![프로젝트 목록](docs/lighthouse/images/advent-calendar-project-list.png) |
+
+| 프로젝트 상세 (캘린더) | 프로젝트 생성 | 친구 초대 |
+|:---:|:---:|:---:|
+| ![프로젝트 상세](docs/lighthouse/images/advent-calendar-project-detail.png) | ![프로젝트 생성](docs/lighthouse/images/advent-calendar-create-project.png) | ![친구 초대](docs/lighthouse/images/advent-calendar-join-project.png) |
+
 ### 인증 시스템
 
 - Google 소셜 로그인
