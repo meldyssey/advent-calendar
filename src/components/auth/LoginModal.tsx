@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/firebase/auth"; // 수정된 signInWithGoogle import
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
@@ -55,10 +56,10 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-2">
-          <button
+          <Button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="font-gowun flex w-full items-center justify-center gap-2 rounded-[14px] bg-primary py-3.5 text-[15px] font-bold text-primary-foreground disabled:opacity-60"
+            className="font-gowun h-auto w-full gap-2 rounded-[14px] py-3.5 text-[15px] font-bold"
           >
             {loading ? (
               <>
@@ -68,7 +69,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             ) : (
               'Google로 계속하기'
             )}
-          </button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
