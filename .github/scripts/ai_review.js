@@ -61,7 +61,7 @@ If overall looks good, a short compliment is fine. Keep feedback concise and act
   \`\`\`
   ${truncated ? "\n> ⚠️  diff가 너무 커서 앞부분만 리뷰되었습니다." : ""}`;
 
-    const model = "gpt-5.1-codex-mini"
+    const model = "gpt-5.1"
     const context = [
       { role: 'user', content: prompt }
     ];
