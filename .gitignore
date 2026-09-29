@@ -35,3 +35,10 @@ stats.html
 
 # Firebase
 .firebase
+
+# playwright
+playwright-report/
+test-results/
+
+# Claude Code
+.claude/

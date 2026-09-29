@@ -52,10 +52,21 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+  			'advent-green': '#1E3227',
+  			'advent-cream': '#F3ECDA',
+  			'advent-charcoal': '#1E1D1B',
+  			'advent-brick': '#A6402F',
+  			'advent-sage': '#8FA07E',
+  			'advent-sage-tint': '#EEF2EA',
+  			'advent-sage-border': '#C7D4BC',
+  			'advent-sage-text': '#3E4A38',
+  			'advent-mist': '#C9D3B9'
   		},
 			fontFamily: {
         yangju: ['YangjuByeolsan', 'sans-serif'],  // 🆕
+        blackhan: ['"Black Han Sans"', 'sans-serif'],
+        gowun: ['"Gowun Batang"', 'serif'],
       },
   	}
   },

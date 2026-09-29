@@ -93,11 +93,14 @@ export const ImageUploadModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+      <div className="bg-advent-cream rounded-[26px] max-w-md w-full p-6 shadow-[0_18px_34px_rgba(0,0,0,0.28)]">
         {/* 헤더 */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-slate-900">이미지 업로드</h2>
-          <p className="text-sm text-slate-600 mt-1">
+          <span className="font-gowun text-[11px] font-bold tracking-[3px] text-advent-brick">
+            UPLOAD
+          </span>
+          <h2 className="font-blackhan text-2xl text-advent-charcoal">이미지 업로드</h2>
+          <p className="font-gowun text-sm text-stone-600 mt-1">
             D-{totalDays - dayNumber}: {dayTheme}
           </p>
         </div>
@@ -106,7 +109,7 @@ export const ImageUploadModal = ({
         {!preview ? (
           <div className="mb-4">
             <label className="block w-full">
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors">
+              <div className="border-2 border-dashed border-slate-300 rounded-[18px] p-8 text-center cursor-pointer hover:border-advent-sage hover:bg-white transition-colors">
                 <UploadCloud className="w-12 h-12 mx-auto text-slate-400 mb-2"/>
                 <p className="text-slate-600">클릭하여 이미지 선택</p>
                 <p className="text-xs text-slate-400 mt-1">
@@ -124,11 +127,11 @@ export const ImageUploadModal = ({
         ) : (
           <div className="mb-4">
             {/* 미리보기 */}
-            <div className="relative h-[60vh] bg-slate-100 rounded-lg flex items-center justify-center">
+            <div className="relative h-[60vh] bg-stone-100 rounded-[18px] flex items-center justify-center">
               <img
                 src={preview}
                 alt="Preview"
-                className="max-w-full max-h-full object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain rounded-[18px]"
               />
               <button
                 onClick={() => {
@@ -146,7 +149,7 @@ export const ImageUploadModal = ({
               <div className="mt-4">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-advent-brick h-2 rounded-full transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>

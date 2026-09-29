@@ -1,9 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
 import { LoginModal } from '@/components/auth/LoginModal';
+import { AdventHero } from '@/components/home/AdventHero';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { PlusCircle, FolderOpen } from 'lucide-react';
 
 export const HomePage = () => {
   const { user } = useAuth();
@@ -13,77 +14,66 @@ export const HomePage = () => {
   return (
     <>
       <meta name="description" content="친구들과 날짜별 테마에 맞춰 사진을 공유하는 어드벤트 캘린더" />
-      <div className="p-8">
-        <div className="max-w-4xl mx-auto">
-          {/* 로고 + 환영메시지 */}
-          <img 
-            src="/images/logo.png" 
-            alt="Logo" 
-            className="w-full max-w-xl mx-auto"
-          />
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-yangju text-slate-900 mt-10">
-              함께 만드는 특별한 추억
-            </h2>
-            <p className="font-yangju text-xl text-slate-600 mt-4">
-              어드벤트 캘린더로 소중한 순간을 기록하세요
-            </p>
+      <div className="flex-1 bg-advent-green">
+        <div className="mx-auto flex max-w-xl flex-col gap-6 px-6 py-12 sm:py-16">
+          <AdventHero />
+
+          {/* CTA 카드 */}
+          <div className="flex flex-col gap-3.5 rounded-[26px] bg-advent-cream p-6 shadow-[0_18px_34px_rgba(0,0,0,0.28)]">
+            <span className="font-gowun text-[11px] font-bold tracking-[3px] text-advent-brick">START</span>
+            <p className="font-blackhan text-xl text-advent-charcoal">시작하기</p>
+
+            {user ? (
+              <>
+                <p className="font-gowun text-sm leading-relaxed text-stone-600">
+                  새로운 프로젝트를 만들거나 기존 프로젝트를 확인하세요
+                </p>
+                <div className="mt-1 flex flex-col gap-2.5">
+                  <Button
+                    onClick={() => navigate('/projects/new')}
+                    className="font-gowun h-auto w-full gap-2 rounded-[14px] py-3.5 text-[15px] font-bold"
+                  >
+                    <PlusCircle className="h-[18px] w-[18px]" />
+                    새 프로젝트 만들기
+                  </Button>
+                  <Button
+                    onClick={() => navigate('/projects')}
+                    variant="outline"
+                    className="font-gowun h-auto w-full gap-2 rounded-[14px] border-[1.6px] border-advent-sage bg-transparent py-3 text-[15px] font-bold text-advent-charcoal"
+                  >
+                    <FolderOpen className="h-[18px] w-[18px]" />
+                    내 프로젝트 보기
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="font-gowun text-sm leading-relaxed text-stone-600">
+                  프로젝트를 시작하기 위해 로그인해주세요.
+                </p>
+                <Button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="font-gowun h-auto w-full gap-2 rounded-[14px] py-3.5 text-[15px] font-bold"
+                >
+                  로그인하기
+                </Button>
+              </>
+            )}
           </div>
 
-          {user ? (
-            <Card className="max-w-xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
-              <CardHeader className="text-center">
-                <div className="text-6xl mb-4">🎁</div>
-                <CardTitle className="text-2xl">시작하기</CardTitle>
-                <CardDescription>
-                  새로운 프로젝트를 만들거나 기존 프로젝트를 확인하세요
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  onClick={()=>navigate('/projects/new')}
-                  className="w-full" 
-                  size="lg"
-                >
-                  📝 새 프로젝트 만들기
-                </Button>
-                <Button 
-                  onClick={() => navigate('/projects')}
-                  className="w-full" 
-                  variant="outline" 
-                  size="lg">
-                  📂 내 프로젝트 보기
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="max-w-xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-100">
-            <CardHeader className="text-center">
-              <div className="text-6xl mb-4">🎁</div>
-              <CardTitle className="text-2xl">시작하기</CardTitle>
-              <CardDescription>
-                프로젝트를 시작하기 위해 로그인해주세요.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button
-                onClick={() => setIsLoginModalOpen(true)}
-                className="w-full"
-                size="lg"
-              >
-                로그인하기
-              </Button>
-            </CardContent>
-          </Card>
-          )}
-
-          {/* 로그인 모달 */}
-          <LoginModal
-            open={isLoginModalOpen}
-            onOpenChange={setIsLoginModalOpen}
-          />
+          {/* 하단 라벨 */}
+          <div className="flex items-center justify-center gap-2.5">
+            <div className="h-px w-6 bg-advent-cream/35" />
+            <span className="font-gowun text-[10px] tracking-[3px] text-advent-cream/55">
+              MAKE MEMORIES TOGETHER
+            </span>
+            <div className="h-px w-6 bg-advent-cream/35" />
+          </div>
         </div>
+
+        {/* 로그인 모달 */}
+        <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} />
       </div>
     </>
-  )
-}
+  );
+};

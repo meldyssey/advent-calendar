@@ -36,7 +36,7 @@ export const JoinProjectPage = () => {
 
   if (projectDataError || !project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-advent-cream">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">
@@ -55,7 +55,7 @@ export const JoinProjectPage = () => {
 
   if (alreadyMember) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-advent-cream">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <div className="text-6xl mb-4">✅</div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">
@@ -75,7 +75,7 @@ export const JoinProjectPage = () => {
   return (
     <>
       <meta name="description" content="초대 링크로 어드벤트 캘린더에 참여하세요" />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-advent-cream p-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
           {/* 초대 헤더 */}
           <div className="text-center mb-6">

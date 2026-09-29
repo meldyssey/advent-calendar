@@ -38,11 +38,11 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-gradient-to-br from-blue-50 to-indigo-100">
+    <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-advent-cream">
       <CardHeader>
         <div className="flex items-start justify-between">
           <CardTitle className="text-xl">{project.title}</CardTitle>
-          <span className="text-sm font-bold text-blue-600">
+          <span className="text-sm font-bold text-advent-brick">
             {getDaysRemaining()}
           </span>
         </div>

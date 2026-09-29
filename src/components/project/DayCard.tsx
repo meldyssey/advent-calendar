@@ -115,7 +115,7 @@ export const DayCard = ({ day, projectId, totalDays, memberCount }: DayCardProps
                         disabled={!canUpload}
                         className={`w-full h-full border-2 border-dashed rounded flex flex-col items-center justify-center gap-1 transition-colors ${
                           canUpload
-                            ? 'border-slate-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                            ? 'border-slate-300 hover:border-advent-sage hover:bg-advent-cream cursor-pointer'
                             : 'border-slate-200 bg-slate-50 cursor-not-allowed'
                         }`}
                       >
