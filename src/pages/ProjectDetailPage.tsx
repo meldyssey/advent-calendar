@@ -86,7 +86,7 @@ export const ProjectDetailPage = () => {
                 <span>
                   📅 {new Date(project.startDate).toLocaleDateString('ko-KR')} - {new Date(project.endDate).toLocaleDateString('ko-KR')}
                 </span>
-                <span className="text-lg font-semibold text-blue-600">
+                <span className="text-lg font-semibold text-advent-brick">
                   {dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day' : '종료'}
                 </span>
                 <span>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -43,19 +42,23 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md rounded-[26px] border-none bg-advent-cream p-6 shadow-[0_18px_34px_rgba(0,0,0,0.28)]">
         <DialogHeader>
-          <DialogTitle>로그인</DialogTitle>
-          <DialogDescription>
+          <span className="font-gowun text-[11px] font-bold tracking-[3px] text-advent-brick">
+            LOGIN
+          </span>
+          <DialogTitle className="font-blackhan text-2xl text-advent-charcoal">
+            로그인
+          </DialogTitle>
+          <DialogDescription className="font-gowun text-sm text-stone-600">
             Google 계정으로 로그인해주세요.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4 py-4">
-          <Button
-            variant="outline"
-            className="w-full flex items-center gap-2"
+        <div className="flex flex-col gap-4 py-2">
+          <button
             onClick={handleGoogleLogin}
             disabled={loading}
+            className="font-gowun flex w-full items-center justify-center gap-2 rounded-[14px] bg-primary py-3.5 text-[15px] font-bold text-primary-foreground disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -63,11 +66,9 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
                 로그인 중...
               </>
             ) : (
-              <>
-                Google로 계속하기
-              </>
+              'Google로 계속하기'
             )}
-          </Button>
+          </button>
         </div>
       </DialogContent>
     </Dialog>

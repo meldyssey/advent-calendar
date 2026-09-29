@@ -301,11 +301,11 @@ export const CreateProjectForm = () => {
             </Select>
             {/* 주제 보기 */}
             {(
-              <div className="bg-blue-50 rounded-lg p-8 border-2 border-blue-200">
-                <h3 className="text-lg font-semibold text-blue-900 mb-4">
+              <div className="bg-advent-sage-tint rounded-lg p-8 border-2 border-advent-sage-border">
+                <h3 className="text-lg font-semibold text-advent-sage-text mb-4">
                   주제 미리보기
                 </h3>
-                {themeType ==='default' && <div className="grid grid-cols-2 gap-3 text-sm text-blue-800">
+                {themeType ==='default' && <div className="grid grid-cols-2 gap-3 text-sm text-advent-sage-text">
                   {themes.map((__, index) =>{
                     if(index === themes.length-1){
                       return(

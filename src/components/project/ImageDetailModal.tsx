@@ -82,13 +82,16 @@ export const ImageDetailModal = ({
           <X className="w-8 h-8" />
         </button>
         {/* 이미지 */}
-        <div className="bg-white rounded-lg overflow-hidden flex flex-col max-h-full">
-          <div className='m-2 text-lg'>
-            <h1 className="text-center font-bold text-slate-900 mb-1">
+        <div className="bg-advent-cream rounded-[26px] overflow-hidden flex flex-col max-h-full">
+          <div className="px-4 pt-4 pb-2 text-center">
+            <span className="font-gowun text-[11px] font-bold tracking-[3px] text-advent-brick">
+              DAY {dayNumber}
+            </span>
+            <h1 className="font-blackhan text-xl text-advent-charcoal mt-1">
               D-{totalDays - dayNumber}: {dayTheme}
             </h1>
-          </div>     
-          <div className="relative flex-shrink-0 h-[60vh] bg-slate-100 flex items-center justify-center">
+          </div>
+          <div className="relative flex-shrink-0 h-[60vh] bg-stone-100 flex items-center justify-center">
             <img
               src={currentImage.imageUrl}
               alt={`Day ${dayNumber} - ${dayTheme}`}
@@ -123,10 +126,10 @@ export const ImageDetailModal = ({
           </div>
 
           {/* 이미지 정보 */}
-          <div className="p-4 border-t overflow-y-auto flex-shrink">
+          <div className="p-4 border-t border-stone-200 overflow-y-auto flex-shrink">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <div className="space-y-1 text-xs text-slate-600">
+                <div className="font-gowun space-y-1 text-xs text-stone-600">
                   <p>
                     👤 {currentImage.userName}
                   </p>
@@ -165,8 +168,8 @@ export const ImageDetailModal = ({
                     onClick={() => setCurrentIndex(index)}
                     className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
                       index === currentIndex
-                        ? 'border-blue-500 scale-105'
-                        : 'border-slate-300 opacity-60 hover:opacity-100'
+                        ? 'border-advent-brick scale-105'
+                        : 'border-stone-300 opacity-60 hover:opacity-100'
                     }`}
                   >
                     <img

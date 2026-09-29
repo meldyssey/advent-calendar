@@ -4,6 +4,7 @@ import { logout } from '@/firebase/auth';
 import { useNavigate } from 'react-router';
 import { LoginModal } from '../auth/LoginModal';
 import { useState } from 'react';
+import { Sparkle } from 'lucide-react';
 
 export const Header = () => {
   const { user } = useAuth();
@@ -24,11 +25,13 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-center flex-wrap md:justify-between md:flex-nowrap">
           {/* 로고 */}
-          <button 
+          <button
             onClick={() => navigate('/')}
-            className="text-2xl font-yangju text-slate-900"
+            className="flex items-center gap-2 text-2xl font-gowun uppercase text-slate-900"
           >
+            <Sparkle className="h-5 w-5" />
             Advent Calendar
+            <Sparkle className="h-5 w-5" />
           </button>
 
           {/* 네비게이션 */}
