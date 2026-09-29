@@ -16,5 +16,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🔗 테스트 주소: https://advent-calendar-68497--test-6iroz57l.web.app/'
+              body: '🔗 테스트 주소: https://advent-calendar-68497--test-oxbcudca.web.app/'
             })
